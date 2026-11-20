@@ -38,24 +38,32 @@ function icon(name, x, y, scale, color) {
 }
 
 function cyclone() {
-  // Schematic only. The dashed arrow marks the direction in the forecast.
+  // Simplified Natural Earth land, clipped to 81.9–88.7°E and 16.3–21.65°N.
+  const land = 'M894 158L872 177L880 211L865 235L842 255L833 252L838 256L832 261L791 274L786 274L790 270L786 262L770 270L766 280L778 275L782 278L740 310L698 362L669 377L640 406L587 438L582 448L585 465L558 483L558 151L923 151L894 158Z';
+  function project(lon, lat) {
+    return [558 + (lon - 81.9) * 431 / 6.8, 151 + (21.65 - lat) * 337 / 5.35];
+  }
+  const [townX, townY] = project(84.86, 19.26);
+  const [stormX, stormY] = project(84.9, 17.7);
+  const [forecastX, forecastY] = project(85.0, 19.3);
   return `<g clip-path="url(#panel)">
     <rect x="558" y="151" width="431" height="337" fill="url(#water)"/>
     <rect x="558" y="151" width="431" height="337" fill="url(#grid)"/>
-    <path d="M559 150h376l-2 24-40 4-19 21-44 19-10 18-26 12-23 35-26 18-13 26-35 17-19 29-32 20-20 33-17 58h-50Z" fill="#397078"/>
-    <path d="M935 150l-2 24-40 4-19 21-44 19-10 18-26 12-23 35-26 18-13 26-35 17-19 29-32 20-20 33-17 58" stroke="#b5d9c9" stroke-width="2" fill="none"/>
-    <path d="M914 419Q863 385 828 317T800 267" fill="none" stroke="${gold}" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
-    <circle cx="797" cy="256" r="9" fill="none" stroke="${gold}" stroke-width="2"/>
-    <circle cx="797" cy="256" r="3" fill="${gold}"/>
-    <g fill="none" stroke="#cde3d9" stroke-width="3" stroke-linecap="round">
-      <path d="M962 369c-31-24-91-2-92 36-1 37 43 46 61 27 14-15 3-34-12-34-11 0-15 11-10 16"/>
-      <path d="M861 449c31 24 91 2 92-36 1-37-43-46-61-27-14 15-3 34 12 34 11 0 15-11 10-16" opacity=".7"/>
-    </g>
-    ${text('ODISHA', 841, 198, 18, { fill: cream, weight: 700, spacing: 1 })}
-    ${text('ANDHRA', 579, 300, 17, { fill: cream, weight: 700, spacing: 1 })}
-    ${text('PRADESH', 579, 322, 17, { fill: cream, weight: 700, spacing: 1 })}
-    ${text('BAY OF BENGAL', 862, 307, 18, { fill: '#b5d9c9', weight: 700, anchor: 'middle' })}
-    ${text('SCHEMATIC FORECAST', 971, 472, 14, { fill: gold, anchor: 'end', weight: 700, spacing: 1 })}
+    <path d="${land}" fill="#397078" stroke="#a8c8bd" stroke-width="2"/>
+    ${text('ODISHA', 725, 199, 22, { fill: cream, weight: 700, spacing: 1 })}
+    ${lines(['ANDHRA', 'PRADESH'], 575, 327, 20, 24, { fill: cream, weight: 700, spacing: .6 })}
+    ${text('BAY OF BENGAL', 967, 278, 18, { fill: '#b5d9c9', weight: 700, anchor: 'end' })}
+    <path d="M950 220v-27m-5 6 5-8 5 8" stroke="#b5d9c9" stroke-width="2" fill="none"/>
+    ${text('N', 950, 186, 17, { fill: '#b5d9c9', anchor: 'middle', weight: 700 })}
+    <path d="M${stormX} ${stormY-13}L${forecastX} ${forecastY+13}" stroke="${gold}" stroke-width="3" stroke-dasharray="7 6" fill="none" marker-end="url(#arrow)"/>
+    <path d="M${townX-7} ${townY-6}L${townX-27} ${townY-25}H585" stroke="${gold}" stroke-width="2" fill="none"/>
+    <circle cx="${townX}" cy="${townY}" r="6" fill="${gold}" stroke="${sea}" stroke-width="2"/>
+    ${text('GOPALPUR', 585, townY-33, 21, { fill: gold, weight: 700 })}
+    ${text('FORECAST', 771, 352, 18, { fill: gold, weight: 700, spacing: .5 })}
+    <circle cx="${stormX}" cy="${stormY}" r="8" fill="#e2eae1" stroke="${sea}" stroke-width="2"/>
+    ${text('AKVAN CENTER', 771, stormY-3, 18, { fill: cream, weight: 700 })}
+    ${text('02:30 IST', 771, stormY+21, 17, { fill: cream })}
+    ${text('IMD BULLETIN 36  /  20 NOV', 968, 472, 15, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
   </g>`;
 }
 
