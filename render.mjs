@@ -272,20 +272,53 @@ function reportCard(item, i) {
   </g>`;
 }
 
-function briefColumn(items, x) {
-  return items.map(({ label, detail }, i) => {
-    const y = 810 + i * 20.3;
-    return `
-      ${rect(x, y, 480, 20.3, i % 2 ? '#e9e1d1' : paper)}
-      <text x="${x + 4}" y="${y + 15}" font-family="${sans}" font-size="17.5" fill="${ink}">
-        <tspan font-size="14.6" font-weight="700" fill="#813b30">${xml(label)}</tspan><tspan> · ${xml(detail)}</tspan>
-      </text>
-    `;
+const briefIcons = {
+  people: '<circle cx="8" cy="6" r="2.5"/><circle cx="16" cy="7" r="2"/><path d="M3 19v-3a5 5 0 0 1 10 0v3m1-7a4 4 0 0 1 7 3v4"/>',
+  prices: '<path d="M3 20h18M5 16v-4m5 4V9m5 7V6m5 10V3M4 8l6-3 5 1 4-3"/>',
+  store: '<path d="M4 10h16v11H4zm-2 0 3-6h14l3 6H2zm7 11v-6h6v6"/>',
+  gauge: '<path d="M3 17a9 9 0 0 1 18 0M12 16l5-5M6 18h12"/><circle cx="12" cy="16" r="1.5"/>',
+  fall: '<path d="M3 5l6 7 4-4 7 9m-6 0h6v-6"/>',
+  cricket: '<path d="M4 20h16m-4-2L7 9l3-3 9 9-3 3ZM7 9 3 5"/><circle cx="19" cy="5" r="2"/>',
+  alert: '<path d="m12 3 10 17H2l10-17zm0 6v5m0 3v.5"/>',
+  gate: '<path d="M5 21V5m14 16V5M5 9l14 7m0-7L5 16"/>',
+  transit: '<rect x="5" y="3" width="14" height="15" rx="3"/><path d="M5 12h14m-11 7-2 2m10-2 2 2M9 7h6"/>',
+  ballot: '<path d="M4 11h16v10H4zm4-3 4-5 5 4-3 4m-6 4h8"/>',
+  bank: '<path d="m3 8 9-5 9 5H3zm3 3v6m6-6v6m6-6v6M4 20h16"/>',
+  dialogue: '<path d="M3 4h13v8H9l-4 4v-4H3zm8 11h5l3 3v-3h2V8h-2"/>',
+  health: '<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+  tree: '<path d="M12 21v-7m0 3c-7 0-9-6-7-10 4 0 6 2 7 5 1-5 4-8 8-8 2 5-1 13-8 13z"/>',
+  water: '<path d="M12 3c-3 5-7 7-7 12a7 7 0 0 0 14 0c0-5-4-7-7-12zm-4 13c.5 2 2 3 4 3"/>',
+  heritage: '<path d="M3 5q5-2 9 1 4-3 9-1v14q-5-2-9 1-4-3-9-1V5zm9 1v14M6 9l3 1m6 0 3-1"/>',
+  calendar: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 9h16M8 3v4m8-4v4m-9 6h2m3 0h2m3 0h1"/>',
+  scales: '<path d="M12 3v17m-4 0h8M4 7h16M6 7l-3 7h6L6 7zm12 0-3 7h6l-3-7z"/>',
+};
+
+const briefColors = [
+  { surface: '#e5eef0', stripe: '#2b607a', value: '#193f53' },
+  { surface: '#f2e6d7', stripe: '#9b4f39', value: '#572e24' },
+  { surface: '#e5eee2', stripe: '#38745c', value: '#285240' },
+];
+
+function briefRow(items, row) {
+  const y = 810 + row * 61;
+  const { surface, stripe, value: inkColor } = briefColors[row];
+  return items.map(({ label, value, note, icon }, i) => {
+    const x = 26 + i * 163.6;
+    const numberSize = row === 0 ? 24 : 18.6;
+    return `<g transform="translate(${x} ${y})">
+      ${rect(0, 0, 154, 55, surface, 3)}
+      ${rect(0, 0, 154, 2, stripe)}
+      ${text(label, 8, 15, 10.8, { fill: stripe, weight: 700, spacing: .45 })}
+      <g transform="translate(126 5) scale(.88)" stroke="${stripe}" stroke-width="1.85"
+        fill="none" stroke-linecap="round" stroke-linejoin="round">${briefIcons[icon]}</g>
+      ${text(value, 8, 37, numberSize, { fill: inkColor, weight: 700 })}
+      ${text(note, 8, 51, 11.7, { fill: ink, weight: 400 })}
+    </g>`;
   }).join('');
 }
 
 function frontPage() {
-  const reportCount = edition.leads.length + edition.reports.length + edition.briefColumns.flat().length;
+  const reportCount = edition.leads.length + edition.reports.length + edition.briefRows.flat().length;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
     <defs>
       <marker id="arrow" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
@@ -308,7 +341,7 @@ function frontPage() {
     ${edition.reports.map(reportCard).join('')}
     ${text('IN BRIEF', 26, 802, 17, { weight: 700, spacing: 1.2 })}
     ${line(130, 796, 998, 796, '#9eaca5')}
-    ${edition.briefColumns.map((col, i) => briefColumn(col, 26 + i * 492)).join('')}
+    ${edition.briefRows.map(briefRow).join('')}
     ${rect(0, 995, 1024, 29, navy)}
     ${text(`AS REPORTED BY ${edition.cutoff}`, 26, 1015, 13.5, { fill: gold, weight: 700, spacing: .85 })}
     ${text('Event dates follow local time', 998, 1015, 13.5, { fill: white, anchor: 'end' })}

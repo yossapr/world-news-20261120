@@ -4,7 +4,7 @@
 [![rank](https://make.fun/badge/news-image-20261120/yossapr/world-news-20261120/rank.svg)](https://make.fun/bounty/news-image-20261120/leaderboard)
 [![reward](https://make.fun/badge/news-image-20261120/yossapr/world-news-20261120/reward.svg)](https://make.fun/bounty/news-image-20261120)
 
-An illustrated snapshot of Friday, 20 November 2026, with 33 reports across six continents and 15 illustrated panels. It leads with the strikes in Ukraine, Cyclone Akvan's landfall in India, and the Asia-wide equity sell-off. The reporting cutoff is 18:30 UTC. Each event or material update is dated in its local time.
+An illustrated snapshot of Friday, 20 November 2026, with 15 feature panels and 18 illustrated briefs covering six continents. It leads with the strikes in Ukraine, Cyclone Akvan's landfall in India, and the Asia-wide equity sell-off. The reporting cutoff is 18:30 UTC. Each event or material update is dated in its local time.
 
 ![World in View front page](front-page.png)
 
@@ -59,5 +59,6 @@ Node 22 writes the checked-in edition to `entry.png` using the standard library.
 - The Kyiv illustration is a schematic count of the three bridges mentioned in the reporting. The red marks indicate reported strikes on the bridges.
 - The Akvan map uses a gold dot for Gopalpur, a white dot for the observed storm center and a dashed arrow for the bulletin's forecast direction. The arrow stops within the map and does not mark a confirmed later position. The coastline is simplified from [Natural Earth](https://www.naturalearthdata.com/about/terms-of-use/).
 - The Asian market bars share a zero baseline and a 7% maximum fall. Each label gives its index's signed close-to-close change.
+- The brief cards use a pictogram, a short outcome and its unit or context. The reporting ledger gives the full definition of each figure.
 - The other illustrated scenes are editorial diagrams. The Florida shape shows the approximate alert corridor. Flags identify the governments in the two diplomatic panels.
 - The Xavier photograph was acquired on 17 November at 02:53 UTC and published on 20 November. Image by Lauren Dauphin for [NASA Earth Observatory](https://science.nasa.gov/earth/earth-observatory/the-stormy-southwest-pacific/), using Aqua MODIS data from NASA EOSDIS LANCE and GIBS/Worldview. The panel gives the 20 November wind estimate separately. The photograph is included under [NASA's media usage guidelines](https://www.nasa.gov/nasa-brand-center/images-and-media/).
