@@ -1,24 +1,21 @@
 export const edition = {
   date: 'Friday, 20 November 2026',
-  cutoff: '18:00 UTC',
+  cutoff: '18:30 UTC',
   leads: [
     {
       label: 'EUROPE / UKRAINE', theme: 'kyiv',
       title: ['Russian strikes hit', 'three Kyiv bridges'],
-      detail: ['Power and rail sites were hit too.', 'At least eight killed across Ukraine.'],
-      source: 'REUTERS / UKRAINIAN OFFICIALS',
+      context: 'At least 8 killed across Ukraine.',
     },
     {
       label: 'SOUTH ASIA / INDIA', theme: 'akvan',
-      title: ['Akvan hits coast', 'near Gopalpur'],
-      detail: ['70–80 km/h winds at landfall.', 'Crossed at 07:30–08:30 IST.'],
-      source: 'INDIA METEOROLOGICAL DEPARTMENT',
+      title: ['Cyclone Akvan hits', 'India near Gopalpur'],
+      context: '70–80 km/h sustained at landfall.',
     },
     {
       label: 'EAST ASIA / MARKETS', theme: 'markets',
-      title: ['AI sell-off spreads', 'across Asia'],
-      detail: ['AI and chip shares led steep losses', 'in Japan, South Korea and Taiwan.'],
-      source: 'NIKKEI / KBS / TAIWAN STOCK EXCHANGE',
+      title: ['AI sell-off sweeps', 'Asian stock markets'],
+      context: 'Chip shares led the Friday decline.',
     },
   ],
   markets: [
@@ -27,54 +24,18 @@ export const edition = {
     { name: 'NIKKEI', change: -5.06 },
   ],
   reports: [
-    {
-      label: 'BRUSSELS', icon: 'treaty', tone: 'blue',
-      title: ['EU and UK', 'strike deals'],
-      detail: ['Food and carbon trade,', 'plus youth mobility.'],
-      source: 'EU–UK JOINT STATEMENT',
-    },
-    {
-      label: 'ANTALYA / COP31', icon: 'overtime', tone: 'green',
-      title: ['Climate talks', 'go into overtime'],
-      detail: ['Fossil fuels and climate', 'finance divide delegates.'],
-      source: 'REUTERS / AP',
-    },
-    {
-      label: 'SAUDI ARABIA', icon: 'port', tone: 'red',
-      title: ['Saudi coalition', 'strikes in Yemen'],
-      detail: ['Coalition says it hit', 'Houthi targets.'],
-      source: 'ASSOCIATED PRESS',
-    },
-    {
-      label: 'KENYA', icon: 'rig', tone: 'gold',
-      title: ['Turkana starts', 'oil drilling'],
-      detail: ['First crude is planned', 'for 1 December.'],
-      source: 'KENYA BROADCASTING CORP.',
-    },
-    {
-      label: 'COOK ISLANDS', metric: '95 KM/H', tone: 'green',
-      title: ['Cyclone Xavier', 'down to Cat. 2'],
-      detail: ['Gale warnings remain for', 'Nassau and Suwarrow.'],
-      source: 'RSMC NADI / BULLETIN 44',
-    },
-    {
-      label: 'NIGERIA', icon: 'learning', tone: 'blue',
-      title: ['Children urge', 'school funding'],
-      detail: ['Young advocates speak', 'at an Abuja event.'],
-      source: 'UNICEF NIGERIA',
-    },
-    {
-      label: 'SHENZHEN', icon: 'dialogue', tone: 'gold',
-      title: ['Xi and Albanese', 'hold talks'],
-      detail: ['The leaders discussed', 'trade and bilateral ties.'],
-      source: 'AUSTRALIAN PRIME MINISTER',
-    },
-    {
-      label: 'UNITED STATES', metric: '≈200 MI', tone: 'blue',
-      title: ['Flood risk shifts', 'up Florida coast'],
-      detail: ['Flood alerts stretch toward', 'the Jacksonville area.'],
-      source: 'AP / NATIONAL WEATHER SERVICE',
-    },
+    { label: 'BRUSSELS / TRADE', scene: 'brussels', title: ['EU and UK agree', 'on three deals'] },
+    { label: 'ANTALYA / CLIMATE', scene: 'antalya', title: ['COP31 talks', 'run into overtime'] },
+    { label: 'YEMEN / CONFLICT', scene: 'yemen', title: ['Coalition says it', 'hit Houthi targets'] },
+    { label: 'KENYA / ENERGY', scene: 'turkana', title: ['Turkana starts', 'oil drilling'] },
+    { label: 'COOK ISLANDS / WEATHER', scene: 'xavier', title: ['Cyclone Xavier', 'eases to Cat. 2'] },
+    { label: 'NIGERIA / EDUCATION', scene: 'abuja', title: ['Students urge', 'more school funds'] },
+    { label: 'SHENZHEN / DIPLOMACY', scene: 'shenzhen', title: ['Xi and Albanese', 'discuss trade'] },
+    { label: 'UNITED STATES / WEATHER', scene: 'florida', title: ['Florida flood risk', 'shifts north'] },
+    { label: 'GERMANY / LABOUR', scene: 'germany', title: ['IG Metall begins', '24-hour strikes'] },
+    { label: 'ARGENTINA / TRANSPORT', scene: 'argentina', title: ['Tesla opens', 'Argentina orders'] },
+    { label: 'NIGERIA / COURTS', scene: 'court', title: ['Atiku’s bid to', 'amend suit fails'] },
+    { label: 'IRAN / ENERGY', scene: 'iran', title: ['Oil tankers mass', 'at Kharg Island'] },
   ],
   briefColumns: [
     [

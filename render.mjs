@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { edition } from './editorial.mjs';
 
@@ -99,82 +99,186 @@ function marketChart() {
   `;
 }
 
-const art = {
-  kyiv: { color: blue, draw: bridgeDiagram },
-  akvan: { color: mint, draw: cycloneMap },
-  markets: { color: red, draw: marketChart },
+const leadArt = {
+  kyiv: { accent: blue, surface: '#214668', draw: bridgeDiagram },
+  akvan: { accent: mint, surface: '#0d4353', draw: cycloneMap },
+  markets: { accent: red, surface: '#38283b', draw: marketChart },
 };
 
 function leadCard(item, x) {
-  const y = 130;
-  const artWidth = 306;
-  const { color, draw } = art[item.theme];
-  const isMap = item.theme === 'akvan';
-  return `<g transform="translate(${x} ${y})">
-    ${rect(0, 0, 306, 303, '#e8e4d8', 5)}
-    ${rect(0, 0, 306, 157, navy, 5)}
-    ${text(item.label, 13, 22, 15, { fill: color, weight: 700, spacing: .75 })}
-    <svg x="0" y="28" width="${artWidth}" height="128" viewBox="0 0 306 128" overflow="hidden">
-      ${rect(0, 0, artWidth, 128, '#153849')}
+  const { accent, surface, draw } = leadArt[item.theme];
+  const legend = item.theme === 'akvan' ? `
+    <circle cx="13" cy="11" r="4.5" fill="${gold}"/>
+    ${text('Town', 23, 16, 14, { fill: white, weight: 700 })}
+    <circle cx="78" cy="11" r="4.5" fill="${white}"/>
+    ${text('Observed center', 89, 16, 14, { fill: white, weight: 700 })}
+    <path d="M205 11h20m-5-4 5 4-5 4" stroke="${gold}" stroke-width="2" stroke-dasharray="3 2" fill="none"/>
+    ${text('Forecast', 233, 16, 14, { fill: white, weight: 700 })}
+  ` : text(item.theme === 'kyiv' ? 'OVERNIGHT STRIKES' : 'NIKKEI / KBS / TWSE',
+    13, 16, 13.5, { fill: accent, weight: 700, spacing: .7 });
+  return `<g transform="translate(${x} 117)">
+    ${rect(0, 0, 312, 259, '#fff9eb', 5)}
+    ${rect(0, 0, 312, 181, navy, 5)}
+    ${text(item.label, 13, 21, 15, { fill: accent, weight: 700, spacing: .75 })}
+    <svg x="0" y="29" width="312" height="130" viewBox="0 0 306 128" overflow="hidden">
+      ${rect(0, 0, 306, 128, surface)}
       ${draw()}
     </svg>
-    ${isMap ? `<g transform="translate(0 153)">
-      ${rect(0, 0, 306, 24, navy)}
-      <circle cx="13" cy="12" r="3.8" fill="${gold}"/>
-      ${text('Town', 22, 17, 14, { fill: white, weight: 700 })}
-      <circle cx="75" cy="12" r="4" fill="${white}"/>
-      ${text('Observed center', 85, 17, 14, { fill: white, weight: 700 })}
-      <path d="M198 12h20m-5-4 5 4-5 4" stroke="${gold}" stroke-width="1.8" stroke-dasharray="4 2" fill="none"/>
-      ${text('Forecast', 226, 17, 14, { fill: white, weight: 700 })}
-    </g>` : `<g transform="translate(0 153)">
-      ${rect(0, 0, 306, 24, navy)}
-      ${text(item.theme === 'kyiv' ? 'OVERNIGHT INTO FRIDAY' : 'LOCAL MARKET CLOSES', 13, 17, 12.5, { fill: color, weight: 700, spacing: .65 })}
-    </g>`}
-    ${lines(item.title, 13, 207, 27.5, 29, { font: serif, weight: 700 })}
-    ${lines(item.detail, 13, 259, 16.7, 19, { fill: muted })}
-    ${text(item.source, 13, 296, 10.9, { fill: muted, weight: 700, spacing: .25 })}
+    <g transform="translate(0 160)">${legend}</g>
+    ${lines(item.title, 12, 209, 26, 27, { font: serif, weight: 700 })}
+    ${text(item.context, 13, 253, 15.2, { fill: muted, weight: 700 })}
   </g>`;
 }
 
-const symbols = {
-  treaty: '<path d="M6 12h22l6 6-6 6H6zm26 8h22l6 6-6 6H32l-6-6z"/>',
-  overtime: '<circle cx="31" cy="22" r="16"/><path d="M31 12v10l7 5m9-17 7-3v9m0-9-7 7"/>',
-  port: '<path d="M10 33h45M15 31V11h30l10 7H15m13 0v10m17-10v10M11 37q5 4 10 0 5 4 10 0 5 4 10 0 5 4 10 0"/>',
-  rig: '<path d="M13 39h39M22 39l10-32 10 32M24 31h16M26 23h12M29 16h6M18 39v-9h6m18 9V27h6v12"/>',
-  learning: '<path d="M32 15q-10-9-23-5v22q13-4 23 5 10-9 23-5V10q-13-4-23 5v22M16 17l9 1m14 0 9-1M16 23l9 1m14 0 9-1"/>',
-  dialogue: '<path d="M9 10h30v17H22l-9 6v-6H9zm20 19h12l9 6v-6h5V14H42M15 18h17"/>',
+function star(x, y, radius, fill) {
+  const points = Array.from({ length: 10 }, (_, i) => {
+    const a = i * Math.PI / 5 - Math.PI / 2;
+    const r = i % 2 ? radius * .42 : radius;
+    return `${(x + Math.cos(a) * r).toFixed(2)},${(y + Math.sin(a) * r).toFixed(2)}`;
+  }).join(' ');
+  return `<polygon points="${points}" fill="${fill}"/>`;
+}
+
+function flag(x, y, w, h, code) {
+  const union = `
+    ${rect(0, 0, 78, 43, '#19356f')}
+    <path d="M0 0l78 43M78 0L0 43" stroke="#fff" stroke-width="8"/>
+    <path d="M0 0l78 43M78 0L0 43" stroke="#c93446" stroke-width="3.2"/>
+    <path d="M39 0v43M0 21.5h78" stroke="#fff" stroke-width="13"/>
+    <path d="M39 0v43M0 21.5h78" stroke="#c93446" stroke-width="7"/>
+  `;
+  const panels = {
+    eu: `${rect(0, 0, 78, 43, '#194998')}
+      ${Array.from({ length: 12 }, (_, i) => {
+        const a = i * Math.PI / 6;
+        return star(39 + 13 * Math.sin(a), 21.5 + 13 * Math.cos(a), 2, '#ffda55');
+      }).join('')}`,
+    uk: union,
+    cn: `${rect(0, 0, 78, 43, '#bd2939')}${star(13, 12, 7, '#ffcf58')}
+      ${[[23, 6], [28, 11], [28, 17], [23, 21]].map(([sx, sy]) => star(sx, sy, 2.45, '#ffcf58')).join('')}`,
+    au: `${rect(0, 0, 78, 43, '#19356f')}
+      <svg x="0" y="0" width="39" height="21.5" viewBox="0 0 78 43" overflow="hidden">${union}</svg>
+      ${[[20, 32, 4.7], [59, 8, 3.3], [48, 19, 3.3], [68, 17, 3.3], [59, 34, 3.3], [63, 25, 2.25]].map(([sx, sy, sr]) => star(sx, sy, sr, '#fff')).join('')}`,
+  };
+  return `<svg x="${x}" y="${y}" width="${w}" height="${h}" viewBox="0 0 78 43" overflow="hidden">${panels[code]}</svg>`;
+}
+
+function pairFlags(left, right, surface) {
+  return `
+    ${rect(0, 0, 234, 62, surface)}
+    ${flag(17, 10, 76, 42, left)}
+    ${flag(141, 10, 76, 42, right)}
+    <path d="M101 23h29m-7-6 7 6-7 6m10 10h-29m7-6-7 6 7 6" stroke="#fff3de" stroke-width="2.4" fill="none"/>
+  `;
+}
+
+const photo = readFileSync(new URL('./xavier-nasa.jpg', import.meta.url)).toString('base64');
+
+function sceneText(value, x, y, size, fill = white) {
+  return text(value, x, y, size, { fill, weight: 700, spacing: .32 });
+}
+
+const scenes = {
+  brussels: () => pairFlags('eu', 'uk', '#344c82'),
+  shenzhen: () => pairFlags('cn', 'au', '#653c57'),
+  antalya: () => `
+    ${rect(0, 0, 234, 62, '#306d55')}
+    <circle cx="43" cy="31" r="20" fill="#214f43" stroke="#b9e7cd" stroke-width="3"/>
+    <path d="M43 17v14l11 6m-7-23v-5h-8v5" fill="none" stroke="#e9f7d4" stroke-width="3" stroke-linecap="round"/>
+    ${sceneText('OVERTIME', 77, 33, 25)}
+    ${sceneText('FUELS + FINANCE', 79, 49, 12.5, '#cce9d0')}
+  `,
+  yemen: () => `
+    ${rect(0, 0, 234, 62, '#664254')}
+    <path d="M109 0h125v47l-41 15-47-13-32-22-16-9z" fill="#a36c64"/>
+    <path d="M126 0l24 16 9 14 27 11 14 18m-22-18 56-15" fill="none" stroke="#e2aa88" stroke-width="2"/>
+    ${sceneText('SAUDI-LED', 14, 21, 17)}
+    ${sceneText('COALITION', 14, 39, 17)}
+    ${sceneText('YEMEN', 164, 34, 19)}
+    ${sceneText('SCHEMATIC', 161, 51, 9.5, '#ffdfc0')}
+  `,
+  turkana: () => `
+    ${rect(0, 0, 234, 62, '#84542f')}
+    <path d="M0 49l49-12 52 13 50-13 83 11v14H0z" fill="#d59557"/>
+    <path d="M0 53l49-8 43 12 60-11 82 8v8H0z" fill="#b67347"/>
+    <path d="M27 49L47 10l19 39M32 39h28M36 30h20M41 21h10m-29 28h50" stroke="#ffe4ae" stroke-width="2.5" fill="none"/>
+    ${sceneText('1 DEC', 85, 32, 30)}
+    ${sceneText('PLANNED FIRST OIL', 87, 49, 11.5, '#fff1c5')}
+  `,
+  xavier: () => `
+    ${rect(0, 0, 234, 62, '#22606e')}
+    <image x="0" y="0" width="125" height="62" preserveAspectRatio="xMidYMid slice" href="data:image/jpeg;base64,${photo}"/>
+    ${rect(0, 47, 125, 15, '#102c3e')}
+    ${sceneText('NASA  /  17 NOV UTC', 5, 58, 9.5)}
+    ${sceneText('95', 136, 33, 30)}
+    ${sceneText('KM/H', 177, 33, 13.5, '#d7f4e7')}
+    ${sceneText('GALE ALERTS', 137, 51, 12.5, '#d7f4e7')}
+  `,
+  abuja: () => `
+    ${rect(0, 0, 234, 62, '#3a645c')}
+    <path d="M85 18q-15-10-43-4v33q28-6 43 4 15-10 43-4V14q-28-6-43 4z" fill="#f1e3ac" stroke="#c8e5d6" stroke-width="2"/>
+    <path d="M85 18v30M53 24l19 2m-19 7 19 2m26-9 19-2m-19 11 19-2" stroke="#74846d" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M147 12h68v25h-39l-15 12V37h-14z" fill="#bbdec7"/>
+    <circle cx="168" cy="24" r="2.6" fill="#314f44"/><circle cx="181" cy="24" r="2.6" fill="#314f44"/><circle cx="194" cy="24" r="2.6" fill="#314f44"/>
+  `,
+  florida: () => `
+    ${rect(0, 0, 234, 62, '#315c79')}
+    <path d="M0 0h70l-6 16 13 16 13 16 3 14H49L39 48 24 31V12H0z" fill="#86afa7"/>
+    <path d="M67 12l2 12 14 16 8 14" fill="none" stroke="#ffce83" stroke-width="4"/>
+    <circle cx="67" cy="12" r="4" fill="#fff4d2"/><circle cx="91" cy="54" r="4" fill="#fff4d2"/>
+    ${sceneText('≈200 MI', 110, 33, 25)}
+    ${sceneText('ALERT CORRIDOR', 112, 49, 11.8, '#e1edf0')}
+  `,
+  germany: () => `
+    ${rect(0, 0, 234, 62, '#595165')}
+    <path d="M15 51V31l23 9V27l22 10V23l20 10V11h12v40z" fill="#c6b1cb"/>
+    <path d="M26 45h10m10 0h10m10 0h10" stroke="#5c4d67" stroke-width="4"/>
+    ${sceneText('24 H', 109, 33, 31)}
+    ${sceneText('WARNING STRIKES', 112, 49, 11.5, '#ebdef0')}
+  `,
+  argentina: () => `
+    ${rect(0, 0, 234, 62, '#325d82')}
+    <path d="M12 42q5-11 20-12l12-13q5-4 15-4h33l20 16 14 3 7 13H12z" fill="#ef9a89"/>
+    <path d="M47 20h34l12 10H39z" fill="#3b607c"/>
+    <circle cx="37" cy="45" r="8" fill="#18354c" stroke="#b4d8e3" stroke-width="2.5"/>
+    <circle cx="108" cy="45" r="8" fill="#18354c" stroke="#b4d8e3" stroke-width="2.5"/>
+    ${sceneText('MODEL 3', 144, 28, 16)}
+    ${sceneText('MODEL Y', 144, 47, 16, '#d9eef7')}
+  `,
+  court: () => `
+    ${rect(0, 0, 234, 62, '#69604b')}
+    <path d="M16 24l43-16 43 16zM20 52h79v5H20z" fill="#ecd6a1"/>
+    <path d="M30 28v20m19-20v20m19-20v20m19-20v20" stroke="#ead4a2" stroke-width="7"/>
+    ${sceneText('2027', 116, 33, 27)}
+    ${sceneText('ELIGIBILITY CASE', 118, 49, 12, '#f9e8ba')}
+  `,
+  iran: () => `
+    ${rect(0, 0, 234, 62, '#36576b')}
+    <path d="M0 48q12-6 25 0t25 0 25 0 25 0 25 0 25 0 25 0 25 0 34 0v14H0z" fill="#4a798c"/>
+    <path d="M16 34h87l-9 10H28zM30 22h62v8H30zM21 27h9v6h-9zM46 14h32v5H46zM55 12h14v2H55z" fill="#c7d9cf"/>
+    ${sceneText('>14', 122, 34, 31)}
+    ${sceneText('TANKERS', 124, 51, 13, '#dcf0e7')}
+  `,
 };
 
-const palettes = {
-  blue: ['#dce8eb', '#2c5369'],
-  green: ['#e0ebe0', '#34614e'],
-  gold: ['#f3e6c9', '#775119'],
-  red: ['#f1ded5', '#8b3e35'],
-};
-
-function reportCard(item, x, y) {
-  const [background, foreground] = palettes[item.tone];
-  const graphic = item.metric
-    ? text(item.metric, 220, 23, 16, { fill: foreground, weight: 700, anchor: 'end' })
-    : `<g transform="translate(178 6) scale(.72)" fill="none" stroke="${foreground}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${symbols[item.icon]}</g>`;
+function reportCard(item, i) {
+  const x = 26 + (i % 4) * 246;
+  const y = 404 + Math.floor(i / 4) * 127;
   return `<g transform="translate(${x} ${y})">
-    ${rect(0, 0, 232, 138, background, 4)}
-    ${rect(0, 0, 232, 3, foreground)}
-    ${graphic}
-    ${text(item.label, 11, 23, 14.2, { fill: foreground, weight: 700, spacing: .55 })}
-    ${lines(item.title, 11, 52, 24, 25, { font: serif, weight: 700 })}
-    ${lines(item.detail, 11, 100, 17.3, 19, { fill: muted })}
-    ${text(item.source, 11, 132, 11.2, { fill: foreground, weight: 700, spacing: .18 })}
+    ${rect(0, 0, 234, 122, '#fff9eb', 3)}
+    <svg width="234" height="62" viewBox="0 0 234 62" overflow="hidden">${scenes[item.scene]()}</svg>
+    ${lines(item.title, 8, 83, 22, 21, { font: serif, weight: 700 })}
+    ${text(item.label, 8, 117, 11.5, { fill: '#7d4138', weight: 700, spacing: .36 })}
   </g>`;
 }
 
 function briefColumn(items, x) {
   return items.map(({ label, detail }, i) => {
-    const y = 779 + i * 23;
+    const y = 810 + i * 20.3;
     return `
-      ${rect(x, y, 468, 23, i % 2 ? '#eee8d9' : paper)}
-      <text x="${x + 4}" y="${y + 17}" font-family="${sans}" font-size="20" fill="${ink}">
-        <tspan font-size="16.5" font-weight="700" fill="#813b30">${xml(label)}</tspan><tspan> · ${xml(detail)}</tspan>
+      ${rect(x, y, 480, 20.3, i % 2 ? '#e9e1d1' : paper)}
+      <text x="${x + 4}" y="${y + 15}" font-family="${sans}" font-size="17.5" fill="${ink}">
+        <tspan font-size="14.6" font-weight="700" fill="#813b30">${xml(label)}</tspan><tspan> · ${xml(detail)}</tspan>
       </text>
     `;
   }).join('');
@@ -189,21 +293,25 @@ function frontPage() {
       </marker>
     </defs>
     ${rect(0, 0, 1024, 1024, paper)}
-    ${rect(0, 0, 1024, 6, '#963d31')}
-    ${text('WORLD IN VIEW', 34, 37, 23, { weight: 700, spacing: 3 })}
-    ${text(`${reportCount} REPORTS ACROSS SIX CONTINENTS`, 990, 36, 16, { anchor: 'end', fill: muted, weight: 700, spacing: 1 })}
-    ${text(edition.date, 31, 101, 62, { font: serif, weight: 700 })}
-    ${line(34, 119, 990, 119, '#9eaca5', 1.5)}
-    ${edition.leads.map((item, i) => leadCard(item, 34 + i * 325)).join('')}
-    ${text('AROUND THE WORLD', 34, 460, 21, { weight: 700, spacing: 1.5 })}
-    ${line(309, 451, 990, 451, '#9eaca5', 1.5)}
-    ${edition.reports.map((item, i) => reportCard(item, 34 + (i % 4) * 241, 472 + Math.floor(i / 4) * 146)).join('')}
-    ${text('IN BRIEF', 34, 775, 18.5, { weight: 700, spacing: 1.4 })}
-    ${line(143, 769, 990, 769, '#9eaca5', 1.5)}
-    ${edition.briefColumns.map((column, i) => briefColumn(column, 34 + i * 488)).join('')}
-    ${rect(0, 988, 1024, 36, navy)}
-    ${text('REPORTING SNAPSHOT', 34, 1011, 14, { fill: gold, weight: 700, spacing: 1 })}
-    ${text(`As reported by ${edition.cutoff} · Event dates follow local time`, 990, 1011, 15, { fill: white, anchor: 'end' })}
+    ${rect(0, 0, 1024, 6, '#a34b40')}
+    <g stroke="#93603a" stroke-width="1.55" fill="none">
+      <circle cx="37" cy="30" r="11"/><ellipse cx="37" cy="30" rx="4.3" ry="11"/>
+      <path d="M27 30h20m-17-6h14m-14 12h14"/>
+    </g>
+    ${text('WORLD IN VIEW', 57, 36, 21, { weight: 700, spacing: 2.4 })}
+    ${text(`${reportCount} REPORTS ACROSS SIX CONTINENTS`, 998, 35, 15.5, { anchor: 'end', fill: muted, weight: 700, spacing: .85 })}
+    ${text(edition.date, 23, 93, 61.5, { font: serif, weight: 700 })}
+    ${line(26, 106, 998, 106, '#9eaca5', 1.5)}
+    ${edition.leads.map((item, i) => leadCard(item, 26 + i * 330)).join('')}
+    ${text('AROUND THE WORLD', 26, 396, 17.8, { weight: 700, spacing: 1.6 })}
+    ${line(269, 390, 998, 390, '#9eaca5')}
+    ${edition.reports.map(reportCard).join('')}
+    ${text('IN BRIEF', 26, 802, 17, { weight: 700, spacing: 1.2 })}
+    ${line(130, 796, 998, 796, '#9eaca5')}
+    ${edition.briefColumns.map((col, i) => briefColumn(col, 26 + i * 492)).join('')}
+    ${rect(0, 995, 1024, 29, navy)}
+    ${text(`AS REPORTED BY ${edition.cutoff}`, 26, 1015, 13.5, { fill: gold, weight: 700, spacing: .85 })}
+    ${text('Event dates follow local time', 998, 1015, 13.5, { fill: white, anchor: 'end' })}
   </svg>`;
 }
 
