@@ -63,7 +63,16 @@ function cyclone() {
     <circle cx="${stormX}" cy="${stormY}" r="8" fill="#e2eae1" stroke="${sea}" stroke-width="2"/>
     ${text('AKVAN CENTER', 771, stormY-3, 18, { fill: cream, weight: 700 })}
     ${text('02:30 IST', 771, stormY+21, 17, { fill: cream })}
-    ${text('IMD BULLETIN 36  /  20 NOV', 968, 472, 15, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
+    <rect x="558" y="438" width="431" height="50" fill="#082732"/>
+    ${rule(558, 438, 989, 438, '#75999b', 1)}
+    <circle cx="575" cy="453" r="5" fill="${gold}"/>
+    ${text('Town', 586, 459, 16, { fill: cream, weight: 700 })}
+    <circle cx="660" cy="453" r="5" fill="#e2eae1"/>
+    ${text('Storm center', 671, 459, 16, { fill: cream, weight: 700 })}
+    <path d="M795 453h29" stroke="${gold}" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+    <path d="m820 449 6 4-6 4" stroke="${gold}" stroke-width="2" fill="none"/>
+    ${text('Forecast direction', 836, 459, 16, { fill: cream, weight: 700 })}
+    ${text('IMD BULLETIN 36  /  20 NOV', 977, 480, 12, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
   </g>`;
 }
 
