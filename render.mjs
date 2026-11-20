@@ -2,142 +2,208 @@ import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { edition } from './editorial.mjs';
 
-const cream = '#f8f1e3';
-const paper = '#eae1cd';
-const ink = '#152d31';
-const muted = '#455d5d';
-const rust = '#9b3927';
-const gold = '#f2be72';
-const sea = '#092f38';
-const sans = 'Arial';
+const paper = '#f4eee0';
+const ink = '#172c37';
+const muted = '#3d535a';
+const navy = '#102c3e';
+const white = '#fff8eb';
+const mint = '#b3dfd0';
+const gold = '#ffcb83';
+const blue = '#b5d7f1';
+const red = '#f4a58e';
 const serif = 'Georgia';
-const width = 1024;
+const sans = 'Arial';
 
-const xml = value => value.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const xml = value => value.replace(/[&<>"]/g, ch => ({
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;',
+}[ch]));
+
 function text(value, x, y, size, options = {}) {
   const { fill = ink, font = sans, weight = 400, spacing = 0, anchor = 'start' } = options;
   return `<text x="${x}" y="${y}" fill="${fill}" font-family="${font}" font-size="${size}" font-weight="${weight}" letter-spacing="${spacing}" text-anchor="${anchor}">${xml(value)}</text>`;
 }
-function lines(values, x, y, size, lineHeight, options) {
-  return values.map((value, i) => text(value, x, y + i * lineHeight, size, options)).join('');
-}
-const rule = (x1, y1, x2, y2, color = '#a99e89', stroke = 1) =>
-  `<path d="M${x1} ${y1}H${x2}V${y2}" stroke="${color}" stroke-width="${stroke}" fill="none"/>`;
 
-const symbols = {
-  prices: '<path d="M4 47h49M9 42V29m12 13V21m12 21V25m12 17V11M7 25l13-9 13 3 13-13"/><path d="M38 6h8v8"/>',
-  water: '<path d="M27 4c-4 10-15 18-15 30a15 15 0 0 0 30 0c0-12-11-20-15-30Zm-5 35c0 3 2 5 5 5"/>',
-  orbit: '<circle cx="28" cy="28" r="22"/><ellipse cx="28" cy="28" rx="10" ry="22"/><path d="M7 21h42M7 35h42M28 6v44"/>',
-  summit: '<path d="m5 19 23-11 23 11H5Zm3 29h40m-36-5h32M15 23v17m9-17v17m8-17v17m9-17v17"/><circle cx="28" cy="16" r="1"/>',
-  health: '<path d="M23 7h10v14h14v10H33v14H23V31H9V21h14Z"/><circle cx="28" cy="26" r="24" opacity=".35"/>',
-  retail: '<path d="M9 19h38l4 30H5l4-30Zm10 2v-6a9 9 0 0 1 18 0v6"/>',
-  storm: '<path d="M50 12c-17-10-39 0-39 17 0 13 18 23 30 12 8-7 4-18-4-19-7-1-10 5-9 8M6 44c17 10 39 0 39-17 0-13-18-23-30-12-8 7-4 18 4 19 7 1 10-5 9-8"/>',
-};
-function icon(name, x, y, scale, color) {
-  return `<g transform="translate(${x} ${y}) scale(${scale})" stroke="${color}" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round" fill="none">${symbols[name]}</g>`;
+function lines(values, x, y, size, advance, options) {
+  return values.map((value, i) => text(value, x, y + i * advance, size, options)).join('');
 }
 
-function cyclone() {
-  // Simplified Natural Earth land, clipped to 81.9–88.7°E and 16.3–21.65°N.
+function rect(x, y, w, h, fill, radius = 0) {
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}" fill="${fill}"/>`;
+}
+
+function line(x1, y1, x2, y2, color, width = 1) {
+  return `<path d="M${x1} ${y1}L${x2} ${y2}" stroke="${color}" stroke-width="${width}" fill="none"/>`;
+}
+
+function bridgeDiagram() {
+  const bridges = [[171, 32], [185, 64], [178, 96]];
+  return `
+    <path d="M163 -4C130 29 204 43 183 78c-11 21-16 33-3 54" fill="none" stroke="#47798f" stroke-width="47"/>
+    <path d="M163 -4C130 29 204 43 183 78c-11 21-16 33-3 54" fill="none" stroke="#6d9eaa" stroke-width="1.5"/>
+    ${bridges.map(([x, y]) => `
+      ${line(x - 41, y, x + 39, y, blue, 4)}
+      ${line(x - 41, y + 6, x + 39, y + 6, blue)}
+      <circle cx="${x}" cy="${y + 2}" r="9" fill="#6d3640" stroke="${red}" stroke-width="2"/>
+      <path d="m${x - 3} ${y - 1} 6 6m0-6-6 6" stroke="${white}" stroke-width="2"/>
+    `).join('')}
+    ${text('3', 18, 78, 65, { font: serif, fill: white, weight: 700 })}
+    ${text('BRIDGES HIT', 19, 102, 14, { fill: red, weight: 700, spacing: 0.6 })}
+    ${text('DNIPRO', 282, 45, 14, { fill: blue, weight: 700, anchor: 'end' })}
+    ${text('Schematic', 282, 108, 13, { fill: blue, anchor: 'end' })}
+  `;
+}
+
+function cycloneMap() {
+  // The outline is the same simplified Natural Earth coastline as the earlier edition.
   const land = 'M894 158L872 177L880 211L865 235L842 255L833 252L838 256L832 261L791 274L786 274L790 270L786 262L770 270L766 280L778 275L782 278L740 310L698 362L669 377L640 406L587 438L582 448L585 465L558 483L558 151L923 151L894 158Z';
-  function project(lon, lat) {
-    return [558 + (lon - 81.9) * 431 / 6.8, 151 + (21.65 - lat) * 337 / 5.35];
-  }
+  const project = (lon, lat) => [(lon - 81.9) * 43, (21.65 - lat) * 43];
   const [townX, townY] = project(84.86, 19.26);
   const [stormX, stormY] = project(84.9, 20.0);
-  // The bulletin's 23:30 forecast is beyond the panel. The arrow indicates
-  // direction only and stops at 21.30°N, between the forecast positions.
-  const [forecastX, forecastY] = project(85.05, 21.30);
-  return `<g clip-path="url(#panel)">
-    <rect x="558" y="151" width="431" height="337" fill="url(#water)"/>
-    <rect x="558" y="151" width="431" height="337" fill="url(#grid)"/>
-    <path d="${land}" fill="#397078" stroke="#a8c8bd" stroke-width="2"/>
-    ${text('ODISHA', 578, 199, 22, { fill: cream, weight: 700, spacing: 1 })}
-    ${lines(['ANDHRA', 'PRADESH'], 575, 327, 20, 24, { fill: cream, weight: 700, spacing: .6 })}
-    ${text('BAY OF BENGAL', 967, 376, 18, { fill: '#b5d9c9', weight: 700, anchor: 'end' })}
-    <path d="M950 220v-27m-5 6 5-8 5 8" stroke="#b5d9c9" stroke-width="2" fill="none"/>
-    ${text('N', 950, 186, 17, { fill: '#b5d9c9', anchor: 'middle', weight: 700 })}
-    <path d="M${stormX} ${stormY-13}L${forecastX} ${forecastY}" stroke="${gold}" stroke-width="3" stroke-dasharray="7 6" fill="none" marker-end="url(#arrow)"/>
-    <path d="M${townX-7} ${townY-5}L${townX-26} ${townY-16}H585" stroke="${gold}" stroke-width="2" fill="none"/>
-    <circle cx="${townX}" cy="${townY}" r="6" fill="${gold}" stroke="${sea}" stroke-width="2"/>
-    ${text('GOPALPUR', 585, townY-23, 21, { fill: gold, weight: 700 })}
-    <circle cx="${stormX}" cy="${stormY}" r="8" fill="#e2eae1" stroke="${sea}" stroke-width="2"/>
-    <path d="M${stormX+9} ${stormY}H769" stroke="#e2eae1" stroke-width="1.5"/>
-    <rect x="767" y="${stormY-23}" width="160" height="51" rx="5" fill="${sea}"/>
-    ${text('AKVAN CENTER', 776, stormY-3, 18, { fill: cream, weight: 700 })}
-    ${text('14:30 IST', 776, stormY+18, 17, { fill: cream })}
-    <rect x="558" y="438" width="431" height="50" fill="#082732"/>
-    ${rule(558, 438, 989, 438, '#75999b', 1)}
-    <circle cx="575" cy="453" r="5" fill="${gold}"/>
-    ${text('Town', 586, 459, 16, { fill: cream, weight: 700 })}
-    <circle cx="660" cy="453" r="5" fill="#e2eae1"/>
-    ${text('Storm center', 671, 459, 16, { fill: cream, weight: 700 })}
-    <path d="M795 453h29" stroke="${gold}" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
-    <path d="m820 449 6 4-6 4" stroke="${gold}" stroke-width="2" fill="none"/>
-    ${text('Forecast direction', 836, 459, 16, { fill: cream, weight: 700 })}
-    ${text('IMD BULLETIN 40  /  20 NOV', 977, 480, 12, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
+  const [northX, northY] = project(85.05, 21.3);
+  return `
+    <path d="${land}" transform="translate(-377.9 -102.3) scale(.677)" fill="#356e73" stroke="#acc9bc" stroke-width="2.4"/>
+    ${text('ODISHA', 14, 27, 15, { fill: white, weight: 700, spacing: .6 })}
+    ${text('BAY OF BENGAL', 287, 101, 13, { fill: mint, weight: 700, anchor: 'end' })}
+    <path d="M${stormX} ${stormY - 10}L${northX} ${northY}" stroke="${gold}" stroke-width="3" stroke-dasharray="5 4" fill="none" marker-end="url(#arrow)"/>
+    <path d="M${townX - 6} ${townY - 2}L${townX - 18} ${townY - 9}H14" stroke="${gold}" stroke-width="1.6" fill="none"/>
+    <circle cx="${townX}" cy="${townY}" r="4.5" fill="${gold}" stroke="${navy}" stroke-width="1.5"/>
+    ${text('Gopalpur', 14, townY - 14, 16, { fill: gold, weight: 700 })}
+    <circle cx="${stormX}" cy="${stormY}" r="6" fill="#f9faf0" stroke="${navy}" stroke-width="1.6"/>
+    ${line(stormX + 7, stormY, 146, stormY, white, 1.4)}
+    ${rect(146, stormY - 23, 128, 33, navy, 3)}
+    ${text('14:30 IST center', 154, stormY - 3, 15, { fill: white, weight: 700 })}
+    ${line(260, 31, 260, 17, mint, 1.5)}
+    <path d="m256 23 4-6 4 6" stroke="${mint}" stroke-width="1.5" fill="none"/>
+    ${text('N', 270, 29, 12, { fill: mint, weight: 700 })}
+  `;
+}
+
+function marketChart() {
+  const originX = 97;
+  const plotWidth = 121;
+  const scale = plotWidth / 7;
+  return `
+    ${text('FRIDAY CLOSE  /  DAILY CHANGE', 15, 19, 13.2, { fill: white, weight: 700, spacing: .4 })}
+    ${line(originX, 29, originX, 112, blue)}
+    ${edition.markets.map(({ name, change }, i) => {
+      const y = 34 + i * 28;
+      return `
+        ${text(name, 15, y + 14, 16, { fill: white, weight: 700 })}
+        ${rect(originX, y, plotWidth, 15, '#254356', 3)}
+        ${rect(originX, y, Math.abs(change) * scale, 15, red, 3)}
+        ${text(`−${Math.abs(change).toFixed(2)}%`, 289, y + 14, 17, { fill: white, weight: 700, anchor: 'end' })}
+      `;
+    }).join('')}
+    ${text('0%', originX, 125, 11.8, { fill: blue })}
+    ${text('7% fall', originX + plotWidth, 125, 11.8, { fill: blue, anchor: 'end' })}
+  `;
+}
+
+const art = {
+  kyiv: { color: blue, draw: bridgeDiagram },
+  akvan: { color: mint, draw: cycloneMap },
+  markets: { color: red, draw: marketChart },
+};
+
+function leadCard(item, x) {
+  const y = 146;
+  const artWidth = 306;
+  const { color, draw } = art[item.theme];
+  const isMap = item.theme === 'akvan';
+  return `<g transform="translate(${x} ${y})">
+    ${rect(0, 0, 306, 303, '#e8e4d8', 5)}
+    ${rect(0, 0, 306, 157, navy, 5)}
+    ${text(item.label, 13, 22, 15, { fill: color, weight: 700, spacing: .75 })}
+    <svg x="0" y="28" width="${artWidth}" height="128" viewBox="0 0 306 128" overflow="hidden">
+      ${rect(0, 0, artWidth, 128, '#153849')}
+      ${draw()}
+    </svg>
+    ${isMap ? `<g transform="translate(0 153)">
+      ${rect(0, 0, 306, 24, navy)}
+      <circle cx="13" cy="12" r="3.8" fill="${gold}"/>
+      ${text('Town', 22, 17, 13.5, { fill: white, weight: 700 })}
+      <circle cx="75" cy="12" r="4" fill="${white}"/>
+      ${text('Observed center', 85, 17, 13.5, { fill: white, weight: 700 })}
+      <path d="M198 12h20m-5-4 5 4-5 4" stroke="${gold}" stroke-width="1.8" stroke-dasharray="4 2" fill="none"/>
+      ${text('Forecast', 226, 17, 13.5, { fill: white, weight: 700 })}
+    </g>` : `<g transform="translate(0 153)">
+      ${rect(0, 0, 306, 24, navy)}
+      ${text(item.theme === 'kyiv' ? 'OVERNIGHT INTO FRIDAY' : 'LOCAL MARKET CLOSES', 13, 17, 12.5, { fill: color, weight: 700, spacing: .65 })}
+    </g>`}
+    ${lines(item.title, 13, 207, 27.5, 29, { font: serif, weight: 700 })}
+    ${lines(item.detail, 13, 259, 16.7, 19, { fill: muted })}
+    ${text(item.source, 13, 296, 10.9, { fill: muted, weight: 700, spacing: .25 })}
   </g>`;
 }
 
-function report(item, x, y) {
-  return `${rule(x, y, x + 300, y, ink, 2)}
-    ${text(item.label, x, y + 26, 16, { fill: rust, weight: 700, spacing: 0.7 })}
-    ${icon(item.symbol, x + 260, y + 7, 0.65, rust)}
-    ${lines(item.title, x, y + 67, 27, 30, { font: serif, weight: 700 })}
-    ${lines(item.detail, x, y + 103, 21, 24, { fill: muted })}
-    ${text(item.source, x, y + 152, 12, { fill: muted, weight: 700, spacing: 0.8 })}`;
+const symbols = {
+  treaty: '<path d="M6 12h22l6 6-6 6H6zm26 8h22l6 6-6 6H32l-6-6z"/>',
+  climate: '<circle cx="32" cy="22" r="16"/><ellipse cx="32" cy="22" rx="8" ry="16"/><path d="M17 22h30m-25-8h20m-20 16h20"/>',
+  port: '<path d="M10 33h45M15 31V11h30l10 7H15m13 0v10m17-10v10M11 37q5 4 10 0 5 4 10 0 5 4 10 0 5 4 10 0"/>',
+  rig: '<path d="M13 39h39M22 39l10-32 10 32M24 31h16M26 23h12M29 16h6M18 39v-9h6m18 9V27h6v12"/>',
+  cyclone: '<path d="M56 12c-15-6-36 0-36 14 0 12 17 14 23 5 4-6-4-12-9-6M8 34c15 6 36 0 36-14 0-12-17-14-23-5-4 6 4 12 9 6"/>',
+  learning: '<path d="M32 15q-10-9-23-5v22q13-4 23 5 10-9 23-5V10q-13-4-23 5v22M16 17l9 1m14 0 9-1M16 23l9 1m14 0 9-1"/>',
+  dialogue: '<path d="M9 10h30v17H22l-9 6v-6H9zm20 19h12l9 6v-6h5V14H42M15 18h17"/>',
+  rain: '<path d="M17 24h32a7 7 0 0 0 0-14 12 12 0 0 0-22-3 9 9 0 0 0-10 17Zm2 6-3 7m14-7-3 7m14-7-3 7m14-7-3 7"/>',
+};
+
+const palettes = {
+  blue: ['#dce8eb', '#2c5369'],
+  green: ['#e0ebe0', '#34614e'],
+  gold: ['#f3e6c9', '#775119'],
+  red: ['#f1ded5', '#8b3e35'],
+};
+
+function reportCard(item, x, y) {
+  const [background, foreground] = palettes[item.tone];
+  return `<g transform="translate(${x} ${y})">
+    ${rect(0, 0, 232, 138, background, 4)}
+    ${rect(0, 0, 232, 3, foreground)}
+    <g transform="translate(178 6) scale(.72)" fill="none" stroke="${foreground}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${symbols[item.icon]}</g>
+    ${text(item.label, 11, 23, 14.2, { fill: foreground, weight: 700, spacing: .55 })}
+    ${lines(item.title, 11, 52, 23.5, 25, { font: serif, weight: 700 })}
+    ${lines(item.detail, 11, 100, 16.7, 19, { fill: muted })}
+    ${text(item.source, 11, 132, 10.5, { fill: foreground, weight: 700, spacing: .27 })}
+  </g>`;
 }
 
-function briefCard(item, x, y, i) {
-  const alternate = i % 2 ? '#f8f1e3' : '#e5dac1';
-  return `<rect x="${x}" y="${y}" width="230" height="215" fill="${alternate}"/>
-    ${icon(item.symbol, x + 181, y + 10, 0.64, rust)}
-    ${text(item.label, x + 12, y + 30, 13.5, { fill: rust, weight: 700, spacing: 0.3 })}
-    ${lines(item.title, x + 12, y + 80, 24, 30, { font: serif, weight: 700 })}
-    ${lines(item.detail, x + 12, y + 146, 17.5, 22, { fill: ink })}
-    ${text(item.source, x + 12, y + 199, 11.5, { fill: muted, spacing: 0.7, weight: 700 })}`;
+function briefCard(item, i) {
+  const x = 34 + (i % 4) * 241;
+  const y = 805 + Math.floor(i / 4) * 57;
+  return `<g transform="translate(${x} ${y})">
+    ${line(0, 0, 229, 0, '#b2b9ad')}
+    ${text(item.label, 0, 15, 13.5, { fill: '#813b30', weight: 700, spacing: .42 })}
+    ${lines(item.detail, 0, 34, 17.4, 18, { fill: ink, weight: 600 })}
+  </g>`;
 }
 
 function frontPage() {
-  const hero = edition.hero;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
     <defs>
-      <linearGradient id="water" x1="0" y1="0" x2="1" y2="1">
-        <stop stop-color="#0e4550"/><stop offset="1" stop-color="#061e28"/>
-      </linearGradient>
-      <pattern id="grid" width="29" height="29" patternUnits="userSpaceOnUse">
-        <path d="M0 29V0H29" fill="none" stroke="#76a0a3" stroke-opacity=".32" />
-      </pattern>
-      <clipPath id="panel"><rect x="558" y="151" width="431" height="337"/></clipPath>
-      <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-        <path d="M1 1l6 3-6 3" stroke="${gold}" stroke-width="1.5" fill="none"/>
+      <marker id="arrow" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
+        <path d="M1 1l4 2-4 2" stroke="${gold}" stroke-width="1.3" fill="none"/>
       </marker>
     </defs>
-    <rect width="${width}" height="${width}" fill="${paper}"/>
-    ${rule(36, 31, 988, 31, rust, 3)}
-    ${text(edition.masthead, 33, 101, 69, { font: serif, weight: 700, spacing: -2 })}
-    ${text(edition.date, 986, 103, 22, { fill: rust, weight: 700, anchor: 'end', spacing: .8 })}
-    ${rule(36, 125, 988, 125, ink, 2)}
-    <rect x="36" y="151" width="952" height="337" fill="${sea}"/>
-    ${cyclone()}
-    ${text(hero.label, 61, 194, 20, { fill: gold, weight: 700, spacing: 1.6 })}
-    ${lines(hero.title, 60, 260, 52, 55, { fill: cream, font: serif, weight: 700 })}
-    ${lines(hero.detail, 62, 364, 24, 30, { fill: cream })}
-    ${text(hero.metric, 60, 437, 29, { fill: gold, weight: 700, spacing: .5 })}
-    ${text(hero.unit, 257, 436, 16, { fill: gold, weight: 700, spacing: .6 })}
-    ${text(hero.source, 62, 473, 12, { fill: '#b5d9c9', weight: 700, spacing: 1 })}
-    ${edition.reports.map((item, i) => report(item, 36 + i * 326, 512)).join('')}
-    <rect x="36" y="686" width="952" height="55" fill="${ink}"/>
-    ${text('AROUND THE WORLD', 51, 722, 27, { fill: cream, weight: 700, spacing: 1.6 })}
-    ${edition.briefs.map((item, i) => briefCard(item, 36 + i * 240, 752, i)).join('')}
-    ${rule(36, 983, 988, 983)}
-    ${text('EVENING EDITION', 36, 1006, 15, { fill: muted, weight: 700, spacing: 2 })}
-    ${text('REPORTING DATES FOLLOW LOCAL TIME', 988, 1006, 14, { fill: muted, weight: 700, anchor: 'end', spacing: 1 })}
+    ${rect(0, 0, 1024, 1024, paper)}
+    ${rect(0, 0, 1024, 6, '#963d31')}
+    ${text('WORLD IN VIEW', 34, 37, 23, { weight: 700, spacing: 3 })}
+    ${text(`${edition.leads.length + edition.reports.length + edition.briefs.length} REPORTS ACROSS SIX CONTINENTS`, 990, 36, 16, { anchor: 'end', fill: muted, weight: 700, spacing: 1 })}
+    ${text(edition.date, 31, 101, 62, { font: serif, weight: 700 })}
+    ${text('KYIV BRIDGES HIT   /   AKVAN LANDFALL   /   ASIAN STOCKS FALL', 34, 127, 16.5, { fill: '#813b30', weight: 700, spacing: 1.15 })}
+    ${edition.leads.map((item, i) => leadCard(item, 34 + i * 325)).join('')}
+    ${text('AROUND THE WORLD', 34, 476, 21, { weight: 700, spacing: 1.5 })}
+    ${line(309, 467, 990, 467, '#9eaca5', 1.5)}
+    ${edition.reports.map((item, i) => reportCard(item, 34 + (i % 4) * 241, 488 + Math.floor(i / 4) * 146)).join('')}
+    ${text('IN BRIEF', 34, 796, 18.5, { weight: 700, spacing: 1.4 })}
+    ${line(143, 790, 990, 790, '#9eaca5', 1.5)}
+    ${edition.briefs.map(briefCard).join('')}
+    ${rect(0, 979, 1024, 45, navy)}
+    ${text('REPORTING SNAPSHOT', 34, 1007, 14, { fill: gold, weight: 700, spacing: 1 })}
+    ${text('As reported by 17:30 UTC · Event dates follow local time', 990, 1007, 15, { fill: white, anchor: 'end' })}
   </svg>`;
 }
 
-const rendererPath = process.argv[2];
-const outputPath = process.argv[3];
+const [rendererPath, outputPath] = process.argv.slice(2);
 if (!rendererPath || !outputPath) {
   throw new Error('Usage: node render.mjs <resvg-js module file URL> <output PNG>');
 }
