@@ -138,13 +138,11 @@ function leadCard(item, x) {
 
 const symbols = {
   treaty: '<path d="M6 12h22l6 6-6 6H6zm26 8h22l6 6-6 6H32l-6-6z"/>',
-  climate: '<circle cx="32" cy="22" r="16"/><ellipse cx="32" cy="22" rx="8" ry="16"/><path d="M17 22h30m-25-8h20m-20 16h20"/>',
+  overtime: '<circle cx="31" cy="22" r="16"/><path d="M31 12v10l7 5m9-17 7-3v9m0-9-7 7"/>',
   port: '<path d="M10 33h45M15 31V11h30l10 7H15m13 0v10m17-10v10M11 37q5 4 10 0 5 4 10 0 5 4 10 0 5 4 10 0"/>',
   rig: '<path d="M13 39h39M22 39l10-32 10 32M24 31h16M26 23h12M29 16h6M18 39v-9h6m18 9V27h6v12"/>',
-  cyclone: '<path d="M56 12c-15-6-36 0-36 14 0 12 17 14 23 5 4-6-4-12-9-6M8 34c15 6 36 0 36-14 0-12-17-14-23-5-4 6 4 12 9 6"/>',
   learning: '<path d="M32 15q-10-9-23-5v22q13-4 23 5 10-9 23-5V10q-13-4-23 5v22M16 17l9 1m14 0 9-1M16 23l9 1m14 0 9-1"/>',
   dialogue: '<path d="M9 10h30v17H22l-9 6v-6H9zm20 19h12l9 6v-6h5V14H42M15 18h17"/>',
-  rain: '<path d="M17 24h32a7 7 0 0 0 0-14 12 12 0 0 0-22-3 9 9 0 0 0-10 17Zm2 6-3 7m14-7-3 7m14-7-3 7m14-7-3 7"/>',
 };
 
 const palettes = {
@@ -156,23 +154,26 @@ const palettes = {
 
 function reportCard(item, x, y) {
   const [background, foreground] = palettes[item.tone];
+  const graphic = item.metric
+    ? text(item.metric, 220, 23, 16, { fill: foreground, weight: 700, anchor: 'end' })
+    : `<g transform="translate(178 6) scale(.72)" fill="none" stroke="${foreground}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${symbols[item.icon]}</g>`;
   return `<g transform="translate(${x} ${y})">
     ${rect(0, 0, 232, 138, background, 4)}
     ${rect(0, 0, 232, 3, foreground)}
-    <g transform="translate(178 6) scale(.72)" fill="none" stroke="${foreground}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">${symbols[item.icon]}</g>
+    ${graphic}
     ${text(item.label, 11, 23, 14.2, { fill: foreground, weight: 700, spacing: .55 })}
-    ${lines(item.title, 11, 52, 23.5, 25, { font: serif, weight: 700 })}
-    ${lines(item.detail, 11, 100, 16.7, 19, { fill: muted })}
-    ${text(item.source, 11, 132, 10.5, { fill: foreground, weight: 700, spacing: .27 })}
+    ${lines(item.title, 11, 52, 24, 25, { font: serif, weight: 700 })}
+    ${lines(item.detail, 11, 100, 17.3, 19, { fill: muted })}
+    ${text(item.source, 11, 132, 11.2, { fill: foreground, weight: 700, spacing: .18 })}
   </g>`;
 }
 
 function briefColumn(items, x) {
   return items.map(({ label, detail }, i) => {
-    const y = 782 + i * 23.5;
+    const y = 779 + i * 23;
     return `
-      ${rect(x, y, 468, 23.5, i % 2 ? '#eee8d9' : paper)}
-      <text x="${x + 4}" y="${y + 17}" font-family="${sans}" font-size="19.5" fill="${ink}">
+      ${rect(x, y, 468, 23, i % 2 ? '#eee8d9' : paper)}
+      <text x="${x + 4}" y="${y + 17}" font-family="${sans}" font-size="20" fill="${ink}">
         <tspan font-size="16.5" font-weight="700" fill="#813b30">${xml(label)}</tspan><tspan> · ${xml(detail)}</tspan>
       </text>
     `;
@@ -200,9 +201,9 @@ function frontPage() {
     ${text('IN BRIEF', 34, 775, 18.5, { weight: 700, spacing: 1.4 })}
     ${line(143, 769, 990, 769, '#9eaca5', 1.5)}
     ${edition.briefColumns.map((column, i) => briefColumn(column, 34 + i * 488)).join('')}
-    ${rect(0, 979, 1024, 45, navy)}
-    ${text('REPORTING SNAPSHOT', 34, 1007, 14, { fill: gold, weight: 700, spacing: 1 })}
-    ${text('As reported by 17:30 UTC · Event dates follow local time', 990, 1007, 15, { fill: white, anchor: 'end' })}
+    ${rect(0, 988, 1024, 36, navy)}
+    ${text('REPORTING SNAPSHOT', 34, 1011, 14, { fill: gold, weight: 700, spacing: 1 })}
+    ${text(`As reported by ${edition.cutoff} · Event dates follow local time`, 990, 1011, 15, { fill: white, anchor: 'end' })}
   </svg>`;
 }
 

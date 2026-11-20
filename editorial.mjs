@@ -1,5 +1,6 @@
 export const edition = {
   date: 'Friday, 20 November 2026',
+  cutoff: '18:00 UTC',
   leads: [
     {
       label: 'EUROPE / UKRAINE', theme: 'kyiv',
@@ -10,7 +11,7 @@ export const edition = {
     {
       label: 'SOUTH ASIA / INDIA', theme: 'akvan',
       title: ['Akvan hits coast', 'near Gopalpur'],
-      detail: ['Sustained winds of 70–80 km/h.', 'The storm weakened over Odisha.'],
+      detail: ['70–80 km/h winds at landfall.', 'Crossed at 07:30–08:30 IST.'],
       source: 'INDIA METEOROLOGICAL DEPARTMENT',
     },
     {
@@ -28,33 +29,33 @@ export const edition = {
   reports: [
     {
       label: 'BRUSSELS', icon: 'treaty', tone: 'blue',
-      title: ['EU–UK summit', 'sets out deals'],
-      detail: ['Food trade, carbon markets', 'and youth mobility.'],
+      title: ['EU and UK', 'strike deals'],
+      detail: ['Food and carbon trade,', 'plus youth mobility.'],
       source: 'EU–UK JOINT STATEMENT',
     },
     {
-      label: 'ANTALYA', icon: 'climate', tone: 'green',
-      title: ['COP31 draft', 'draws protests'],
-      detail: ['The text leaves out', 'fossil-fuel language.'],
-      source: 'AFP / AP',
+      label: 'ANTALYA / COP31', icon: 'overtime', tone: 'green',
+      title: ['Climate talks', 'go into overtime'],
+      detail: ['Fossil fuels and climate', 'finance divide delegates.'],
+      source: 'REUTERS / AP',
     },
     {
       label: 'SAUDI ARABIA', icon: 'port', tone: 'red',
-      title: ['Saudi strikes', 'hit Houthis'],
-      detail: ['Riyadh also reports', 'intercepting missiles.'],
+      title: ['Saudi coalition', 'strikes in Yemen'],
+      detail: ['Coalition says it hit', 'Houthi targets.'],
       source: 'ASSOCIATED PRESS',
     },
     {
       label: 'KENYA', icon: 'rig', tone: 'gold',
-      title: ['Oil drilling starts', 'in Turkana'],
-      detail: ['First crude production', 'is planned for December.'],
+      title: ['Turkana starts', 'oil drilling'],
+      detail: ['First crude is planned', 'for 1 December.'],
       source: 'KENYA BROADCASTING CORP.',
     },
     {
-      label: 'COOK ISLANDS', icon: 'cyclone', tone: 'green',
-      title: ['Cyclone Xavier', 'eases to Cat. 3'],
-      detail: ['Nassau remains under', 'a storm warning.'],
-      source: 'RSMC NADI / BULLETIN 42',
+      label: 'COOK ISLANDS', metric: '95 KM/H', tone: 'green',
+      title: ['Cyclone Xavier', 'down to Cat. 2'],
+      detail: ['Gale warnings remain for', 'Nassau and Suwarrow.'],
+      source: 'RSMC NADI / BULLETIN 44',
     },
     {
       label: 'NIGERIA', icon: 'learning', tone: 'blue',
@@ -65,13 +66,13 @@ export const edition = {
     {
       label: 'SHENZHEN', icon: 'dialogue', tone: 'gold',
       title: ['Xi and Albanese', 'hold talks'],
-      detail: ['China and Australia discuss', 'trade and bilateral ties.'],
+      detail: ['The leaders discussed', 'trade and bilateral ties.'],
       source: 'AUSTRALIAN PRIME MINISTER',
     },
     {
-      label: 'UNITED STATES', icon: 'rain', tone: 'blue',
-      title: ['Flood risk moves', 'up Florida coast'],
-      detail: ['Warnings reach toward', 'the Jacksonville area.'],
+      label: 'UNITED STATES', metric: '≈200 MI', tone: 'blue',
+      title: ['Flood risk shifts', 'up Florida coast'],
+      detail: ['Flood alerts stretch toward', 'the Jacksonville area.'],
       source: 'AP / NATIONAL WEATHER SERVICE',
     },
   ],
@@ -85,14 +86,16 @@ export const edition = {
       { label: 'JAPAN', detail: 'Oct. core inflation rises 2.2% year on year' },
       { label: 'MALAYSIA–PHILIPPINES', detail: 'Central banks sign pact' },
       { label: 'SOUTH KOREA', detail: 'First cholera case in a decade' },
+      { label: 'SINGAPORE', detail: 'Princess Aiko plants a friendship tree' },
     ],
     [
       { label: 'CANADA', detail: 'September retail sales rise 0.8%' },
       { label: 'UNITED STATES', detail: 'Consumer sentiment rises to 51.5' },
+      { label: 'WALL STREET', detail: 'S&P 500 dips 10% below peak' },
+      { label: 'VENEZUELA', detail: 'Transition talks extended' },
       { label: 'BRAZIL', detail: 'Students test a fish-bone water filter' },
       { label: 'BRAZIL', detail: 'Black Consciousness Day observed' },
       { label: 'ECUADOR', detail: 'Loja festival brings national holiday' },
-      { label: 'SINGAPORE', detail: 'Princess Aiko plants a friendship tree' },
       { label: 'NEW ZEALAND', detail: 'Phillips scores 118 vs India in Test' },
       { label: 'AUSTRALIA', detail: 'Sydney man faces terrorism charges' },
     ],
