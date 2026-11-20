@@ -106,7 +106,7 @@ const art = {
 };
 
 function leadCard(item, x) {
-  const y = 146;
+  const y = 130;
   const artWidth = 306;
   const { color, draw } = art[item.theme];
   const isMap = item.theme === 'akvan';
@@ -121,11 +121,11 @@ function leadCard(item, x) {
     ${isMap ? `<g transform="translate(0 153)">
       ${rect(0, 0, 306, 24, navy)}
       <circle cx="13" cy="12" r="3.8" fill="${gold}"/>
-      ${text('Town', 22, 17, 13.5, { fill: white, weight: 700 })}
+      ${text('Town', 22, 17, 14, { fill: white, weight: 700 })}
       <circle cx="75" cy="12" r="4" fill="${white}"/>
-      ${text('Observed center', 85, 17, 13.5, { fill: white, weight: 700 })}
+      ${text('Observed center', 85, 17, 14, { fill: white, weight: 700 })}
       <path d="M198 12h20m-5-4 5 4-5 4" stroke="${gold}" stroke-width="1.8" stroke-dasharray="4 2" fill="none"/>
-      ${text('Forecast', 226, 17, 13.5, { fill: white, weight: 700 })}
+      ${text('Forecast', 226, 17, 14, { fill: white, weight: 700 })}
     </g>` : `<g transform="translate(0 153)">
       ${rect(0, 0, 306, 24, navy)}
       ${text(item.theme === 'kyiv' ? 'OVERNIGHT INTO FRIDAY' : 'LOCAL MARKET CLOSES', 13, 17, 12.5, { fill: color, weight: 700, spacing: .65 })}
@@ -167,17 +167,20 @@ function reportCard(item, x, y) {
   </g>`;
 }
 
-function briefCard(item, i) {
-  const x = 34 + (i % 4) * 241;
-  const y = 805 + Math.floor(i / 4) * 57;
-  return `<g transform="translate(${x} ${y})">
-    ${line(0, 0, 229, 0, '#b2b9ad')}
-    ${text(item.label, 0, 15, 13.5, { fill: '#813b30', weight: 700, spacing: .42 })}
-    ${lines(item.detail, 0, 34, 17.4, 18, { fill: ink, weight: 600 })}
-  </g>`;
+function briefColumn(items, x) {
+  return items.map(({ label, detail }, i) => {
+    const y = 782 + i * 23.5;
+    return `
+      ${rect(x, y, 468, 23.5, i % 2 ? '#eee8d9' : paper)}
+      <text x="${x + 4}" y="${y + 17}" font-family="${sans}" font-size="19.5" fill="${ink}">
+        <tspan font-size="16.5" font-weight="700" fill="#813b30">${xml(label)}</tspan><tspan> · ${xml(detail)}</tspan>
+      </text>
+    `;
+  }).join('');
 }
 
 function frontPage() {
+  const reportCount = edition.leads.length + edition.reports.length + edition.briefColumns.flat().length;
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
     <defs>
       <marker id="arrow" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto">
@@ -187,16 +190,16 @@ function frontPage() {
     ${rect(0, 0, 1024, 1024, paper)}
     ${rect(0, 0, 1024, 6, '#963d31')}
     ${text('WORLD IN VIEW', 34, 37, 23, { weight: 700, spacing: 3 })}
-    ${text(`${edition.leads.length + edition.reports.length + edition.briefs.length} REPORTS ACROSS SIX CONTINENTS`, 990, 36, 16, { anchor: 'end', fill: muted, weight: 700, spacing: 1 })}
+    ${text(`${reportCount} REPORTS ACROSS SIX CONTINENTS`, 990, 36, 16, { anchor: 'end', fill: muted, weight: 700, spacing: 1 })}
     ${text(edition.date, 31, 101, 62, { font: serif, weight: 700 })}
-    ${text('KYIV BRIDGES HIT   /   AKVAN LANDFALL   /   ASIAN STOCKS FALL', 34, 127, 16.5, { fill: '#813b30', weight: 700, spacing: 1.15 })}
+    ${line(34, 119, 990, 119, '#9eaca5', 1.5)}
     ${edition.leads.map((item, i) => leadCard(item, 34 + i * 325)).join('')}
-    ${text('AROUND THE WORLD', 34, 476, 21, { weight: 700, spacing: 1.5 })}
-    ${line(309, 467, 990, 467, '#9eaca5', 1.5)}
-    ${edition.reports.map((item, i) => reportCard(item, 34 + (i % 4) * 241, 488 + Math.floor(i / 4) * 146)).join('')}
-    ${text('IN BRIEF', 34, 796, 18.5, { weight: 700, spacing: 1.4 })}
-    ${line(143, 790, 990, 790, '#9eaca5', 1.5)}
-    ${edition.briefs.map(briefCard).join('')}
+    ${text('AROUND THE WORLD', 34, 460, 21, { weight: 700, spacing: 1.5 })}
+    ${line(309, 451, 990, 451, '#9eaca5', 1.5)}
+    ${edition.reports.map((item, i) => reportCard(item, 34 + (i % 4) * 241, 472 + Math.floor(i / 4) * 146)).join('')}
+    ${text('IN BRIEF', 34, 775, 18.5, { weight: 700, spacing: 1.4 })}
+    ${line(143, 769, 990, 769, '#9eaca5', 1.5)}
+    ${edition.briefColumns.map((column, i) => briefColumn(column, 34 + i * 488)).join('')}
     ${rect(0, 979, 1024, 45, navy)}
     ${text('REPORTING SNAPSHOT', 34, 1007, 14, { fill: gold, weight: 700, spacing: 1 })}
     ${text('As reported by 17:30 UTC · Event dates follow local time', 990, 1007, 15, { fill: white, anchor: 'end' })}
