@@ -26,11 +26,11 @@ const rule = (x1, y1, x2, y2, color = '#a99e89', stroke = 1) =>
 
 const symbols = {
   prices: '<path d="M4 47h49M9 42V29m12 13V21m12 21V25m12 17V11M7 25l13-9 13 3 13-13"/><path d="M38 6h8v8"/>',
-  pine: '<path d="M7 41 18 23h-5l10-16 10 16h-5l11 18H7Zm16 0v11M40 49c-7-5-7-10-3-16 0 5 3 6 5 6-1-6 2-10 5-14 0 6 5 11 6 16 1 6-3 9-6 10"/>',
+  water: '<path d="M27 4c-4 10-15 18-15 30a15 15 0 0 0 30 0c0-12-11-20-15-30Zm-5 35c0 3 2 5 5 5"/>',
   orbit: '<circle cx="28" cy="28" r="22"/><ellipse cx="28" cy="28" rx="10" ry="22"/><path d="M7 21h42M7 35h42M28 6v44"/>',
   summit: '<path d="m5 19 23-11 23 11H5Zm3 29h40m-36-5h32M15 23v17m9-17v17m8-17v17m9-17v17"/><circle cx="28" cy="16" r="1"/>',
   health: '<path d="M23 7h10v14h14v10H33v14H23V31H9V21h14Z"/><circle cx="28" cy="26" r="24" opacity=".35"/>',
-  history: '<path d="M28 15C22 8 13 8 5 10v33c11-3 17-1 23 3 6-4 12-6 23-3V10c-8-2-17-2-23 5Zm0 0v31M10 19c5-1 9 0 13 2m-13 7c5-1 9 0 13 2m10-9c4-2 8-3 13-2m-13 11c4-2 8-3 13-2"/>',
+  retail: '<path d="M9 19h38l4 30H5l4-30Zm10 2v-6a9 9 0 0 1 18 0v6"/>',
   storm: '<path d="M50 12c-17-10-39 0-39 17 0 13 18 23 30 12 8-7 4-18-4-19-7-1-10 5-9 8M6 44c17 10 39 0 39-17 0-13-18-23-30-12-8 7-4 18 4 19 7 1 10-5 9-8"/>',
 };
 function icon(name, x, y, scale, color) {
@@ -44,25 +44,28 @@ function cyclone() {
     return [558 + (lon - 81.9) * 431 / 6.8, 151 + (21.65 - lat) * 337 / 5.35];
   }
   const [townX, townY] = project(84.86, 19.26);
-  const [stormX, stormY] = project(84.9, 17.7);
-  const [forecastX, forecastY] = project(85.0, 19.3);
+  const [stormX, stormY] = project(84.9, 20.0);
+  // The bulletin's 23:30 forecast is beyond the panel. The arrow indicates
+  // direction only and stops at 21.30°N, between the forecast positions.
+  const [forecastX, forecastY] = project(85.05, 21.30);
   return `<g clip-path="url(#panel)">
     <rect x="558" y="151" width="431" height="337" fill="url(#water)"/>
     <rect x="558" y="151" width="431" height="337" fill="url(#grid)"/>
     <path d="${land}" fill="#397078" stroke="#a8c8bd" stroke-width="2"/>
-    ${text('ODISHA', 725, 199, 22, { fill: cream, weight: 700, spacing: 1 })}
+    ${text('ODISHA', 578, 199, 22, { fill: cream, weight: 700, spacing: 1 })}
     ${lines(['ANDHRA', 'PRADESH'], 575, 327, 20, 24, { fill: cream, weight: 700, spacing: .6 })}
-    ${text('BAY OF BENGAL', 967, 278, 18, { fill: '#b5d9c9', weight: 700, anchor: 'end' })}
+    ${text('BAY OF BENGAL', 967, 376, 18, { fill: '#b5d9c9', weight: 700, anchor: 'end' })}
     <path d="M950 220v-27m-5 6 5-8 5 8" stroke="#b5d9c9" stroke-width="2" fill="none"/>
     ${text('N', 950, 186, 17, { fill: '#b5d9c9', anchor: 'middle', weight: 700 })}
-    <path d="M${stormX} ${stormY-13}L${forecastX} ${forecastY+13}" stroke="${gold}" stroke-width="3" stroke-dasharray="7 6" fill="none" marker-end="url(#arrow)"/>
-    <path d="M${townX-7} ${townY-6}L${townX-27} ${townY-25}H585" stroke="${gold}" stroke-width="2" fill="none"/>
+    <path d="M${stormX} ${stormY-13}L${forecastX} ${forecastY}" stroke="${gold}" stroke-width="3" stroke-dasharray="7 6" fill="none" marker-end="url(#arrow)"/>
+    <path d="M${townX-7} ${townY-5}L${townX-26} ${townY-16}H585" stroke="${gold}" stroke-width="2" fill="none"/>
     <circle cx="${townX}" cy="${townY}" r="6" fill="${gold}" stroke="${sea}" stroke-width="2"/>
-    ${text('GOPALPUR', 585, townY-33, 21, { fill: gold, weight: 700 })}
-    ${text('FORECAST', 771, 352, 18, { fill: gold, weight: 700, spacing: .5 })}
+    ${text('GOPALPUR', 585, townY-23, 21, { fill: gold, weight: 700 })}
     <circle cx="${stormX}" cy="${stormY}" r="8" fill="#e2eae1" stroke="${sea}" stroke-width="2"/>
-    ${text('AKVAN CENTER', 771, stormY-3, 18, { fill: cream, weight: 700 })}
-    ${text('02:30 IST', 771, stormY+21, 17, { fill: cream })}
+    <path d="M${stormX+9} ${stormY}H769" stroke="#e2eae1" stroke-width="1.5"/>
+    <rect x="767" y="${stormY-23}" width="160" height="51" rx="5" fill="${sea}"/>
+    ${text('AKVAN CENTER', 776, stormY-3, 18, { fill: cream, weight: 700 })}
+    ${text('14:30 IST', 776, stormY+18, 17, { fill: cream })}
     <rect x="558" y="438" width="431" height="50" fill="#082732"/>
     ${rule(558, 438, 989, 438, '#75999b', 1)}
     <circle cx="575" cy="453" r="5" fill="${gold}"/>
@@ -72,7 +75,7 @@ function cyclone() {
     <path d="M795 453h29" stroke="${gold}" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
     <path d="m820 449 6 4-6 4" stroke="${gold}" stroke-width="2" fill="none"/>
     ${text('Forecast direction', 836, 459, 16, { fill: cream, weight: 700 })}
-    ${text('IMD BULLETIN 36  /  20 NOV', 977, 480, 12, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
+    ${text('IMD BULLETIN 40  /  20 NOV', 977, 480, 12, { fill: '#b5d9c9', anchor: 'end', weight: 700, spacing: .4 })}
   </g>`;
 }
 
@@ -85,7 +88,7 @@ function report(item, x, y) {
     ${text(item.source, x, y + 152, 12, { fill: muted, weight: 700, spacing: 0.8 })}`;
 }
 
-function agendaCard(item, x, y, i) {
+function briefCard(item, x, y, i) {
   const alternate = i % 2 ? '#f8f1e3' : '#e5dac1';
   return `<rect x="${x}" y="${y}" width="230" height="215" fill="${alternate}"/>
     ${icon(item.symbol, x + 181, y + 10, 0.64, rust)}
@@ -121,15 +124,14 @@ function frontPage() {
     ${lines(hero.title, 60, 260, 52, 55, { fill: cream, font: serif, weight: 700 })}
     ${lines(hero.detail, 62, 364, 24, 30, { fill: cream })}
     ${text(hero.metric, 60, 437, 29, { fill: gold, weight: 700, spacing: .5 })}
-    ${text(hero.unit, 240, 436, 16, { fill: gold, weight: 700, spacing: .6 })}
+    ${text(hero.unit, 257, 436, 16, { fill: gold, weight: 700, spacing: .6 })}
     ${text(hero.source, 62, 473, 12, { fill: '#b5d9c9', weight: 700, spacing: 1 })}
     ${edition.reports.map((item, i) => report(item, 36 + i * 326, 512)).join('')}
     <rect x="36" y="686" width="952" height="55" fill="${ink}"/>
-    ${text('ON FRIDAY’S AGENDA', 51, 722, 27, { fill: cream, weight: 700, spacing: 1.6 })}
-    ${text('SCHEDULED / EXPECTED', 970, 721, 16, { fill: '#d5d9cb', weight: 700, anchor: 'end', spacing: 1 })}
-    ${edition.agenda.map((item, i) => agendaCard(item, 36 + i * 240, 752, i)).join('')}
+    ${text('AROUND THE WORLD', 51, 722, 27, { fill: cream, weight: 700, spacing: 1.6 })}
+    ${edition.briefs.map((item, i) => briefCard(item, 36 + i * 240, 752, i)).join('')}
     ${rule(36, 983, 988, 983)}
-    ${text('EARLY EDITION', 36, 1006, 15, { fill: muted, weight: 700, spacing: 2 })}
+    ${text('EVENING EDITION', 36, 1006, 15, { fill: muted, weight: 700, spacing: 2 })}
     ${text('REPORTING DATES FOLLOW LOCAL TIME', 988, 1006, 14, { fill: muted, weight: 700, anchor: 'end', spacing: 1 })}
   </svg>`;
 }
