@@ -54,7 +54,7 @@ export const cards = [
   },
   {
     n: 6,
-    kicker: 'POLAND \u00b7 SECURITY',
+    kicker: 'EASTERN POLAND \u00b7 SECURITY',
     head: 'A Russian missile lands in Poland',
     hook: 'It fell in a field; Tusk called it a provocation.',
     src: 'Reuters',

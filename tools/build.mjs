@@ -7,18 +7,6 @@ const edition = JSON.parse(readFileSync(new URL('./edition.json', import.meta.ur
 const landPath = readFileSync(new URL('./land-path.txt', import.meta.url), 'utf8');
 const stories = edition.stories;
 const by = (n) => stories.find((s) => s.n === n);
-// sourcing chip: derived only from what the edition carries.
-// OFFICIAL = the outlet *is* the body that issued the report; CONFIRMED = the edition's
-// summary was built from a published article; REPORTED = built from the outlet's sources.
-const OFFICIAL_OUTLETS = new Set(['imd', 'icc', 'ukmto', 'un news', 'xinhua']);
-const badgeOf = (n) => {
-  const st = by(n);
-  const outs = (st.outlets || []).map((o) => String(o).toLowerCase());
-  if (outs.some((o) => OFFICIAL_OUTLETS.has(o))) return { label: 'OFFICIAL', cls: 'o' };
-  if (st.tldr && st.tldr.basis === 'article') return { label: 'CONFIRMED', cls: 'c' };
-  return { label: 'REPORTED', cls: 'r' };
-};
-const chip = (n) => { const b = badgeOf(n); return `<span class="bdg ${b.cls}">${b.label}</span>`; };
 const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // ---- integrity: every story appears exactly once, and no copy names a story the edition lacks ----
@@ -128,108 +116,45 @@ const candles = Array.from({ length: 9 }, (_, i) => {
 }).join('');
 
 const ART = {
-  bridges: `<svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="gb1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#0a1a30"/><stop offset=".5" stop-color="#1b3a5d"/><stop offset="1" stop-color="#0e2438"/>
-    </linearGradient></defs>
-    <rect width="315" height="96" fill="url(#gb1)"/>
-    <ellipse cx="250" cy="70" rx="120" ry="34" fill="#2a5a7d" opacity=".28"/>
-    <g fill="#060f1b" opacity=".92">
-      <rect x="0" y="56" width="20" height="16"/><rect x="26" y="50" width="12" height="22"/>
-      <rect x="238" y="48" width="16" height="24"/><rect x="258" y="42" width="10" height="30"/>
-      <rect x="272" y="52" width="18" height="20"/><rect x="294" y="46" width="12" height="26"/>
+  bridges: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#13253c"/>
+    <g stroke="#e0662f" stroke-width="1" stroke-linecap="round" opacity="0.95">
+      <path d="M88 4L74 30"/><path d="M100 2L86 32"/><path d="M112 8L98 34"/><path d="M76 2L64 24"/>
     </g>
-    <g fill="none" stroke="#ffc775" stroke-linecap="round">
-      <path d="M314 -6C296 24 236 38 152 56" stroke-width="2.1" opacity=".95"/>
-      <path d="M316 12C292 38 238 50 174 62" stroke-width="1.2" opacity=".8"/>
-      <path d="M302 -8C278 16 222 32 130 50" stroke-width="1" opacity=".7"/>
-      <path d="M318 34C302 50 264 60 222 68" stroke-width="1" opacity=".55"/>
+    <g fill="#f0b24a"><circle cx="74" cy="30" r="1.7"/><circle cx="86" cy="32" r="1.7"/><circle cx="98" cy="34" r="1.7"/><circle cx="64" cy="24" r="1.5"/></g>
+    <path d="M0 78H128" stroke="#aebfd2" stroke-width="1.5"/>
+    <g fill="none" stroke="#e4ebf3" stroke-width="1.3">
+      <path d="M2 78C2 62 28 62 28 78"/><path d="M34 78C34 54 66 54 66 78"/><path d="M72 78C72 62 98 62 98 78"/><path d="M104 78C104 66 124 66 124 78"/>
     </g>
-    <g fill="#ffd9a0">
-      <circle cx="152" cy="56" r="3.2"/><circle cx="174" cy="62" r="2.4"/>
-      <circle cx="130" cy="50" r="1.9"/><circle cx="222" cy="68" r="1.7"/>
+    <g stroke="#dbe3ec" stroke-width="0.6" opacity="0.85">
+      <path d="M15 78V67M59 78V62M85 78V67M114 78V70"/>
+      <path d="M2 70H28M34 64H66M72 70H98M104 73H124"/>
     </g>
-    <g stroke="#f6c27a" stroke-width=".9" opacity=".85">
-      <path d="M152 56l-8-5M152 56l9-4M152 56l-6 7M152 56l10 5"/>
-      <path d="M174 62l-7-4M174 62l8 3M174 62l-4 6"/>
-    </g>
-    <rect x="0" y="70" width="315" height="26" fill="#16405a"/>
-    <g fill="#f3c79a" opacity=".55"><rect x="240" y="58" width="2" height="3"/><rect x="248" y="54" width="2" height="3"/><rect x="258" y="60" width="2" height="3"/><rect x="274" y="56" width="2" height="3"/><rect x="284" y="62" width="2" height="3"/><rect x="298" y="54" width="2" height="3"/><rect x="6" y="60" width="2" height="3"/><rect x="14" y="56" width="2" height="3"/></g>
-    <g stroke="#2c5f79" stroke-width=".8" opacity=".6">
-      <path d="M8 78h26M46 84h34M96 79h30M152 87h44M208 81h26M252 89h40M300 83h12"/>
-    </g>
-    <g fill="none" stroke="#040c15" stroke-linejoin="round">
-      <path d="M16 72h142" stroke-width="3.4"/><path d="M166 76h134" stroke-width="3.2"/>
-      <path d="M16 70.6h142M166 74.6h134" stroke="#5b8bab" stroke-width=".7"/>
-      <path d="M24 72v-9M52 72v-12M80 72v-12M108 72v-12M136 72v-9" stroke-width="1.5"/>
-      <path d="M24 63h112" stroke-width="1.2"/>
-      <path d="M24 63l14 9M52 63l14 9M66 63l14 9M94 63l14 9M108 63l14 9M136 63l-14 9" stroke-width="1"/>
-      <path d="M174 76v-8M200 76v-10M226 76v-10M252 76v-10M278 76v-8" stroke-width="1.5"/>
-      <path d="M174 68h104" stroke-width="1.2"/>
-      <path d="M174 68l13 8M200 68l13 8M213 68l13 8M239 68l13 8M252 68l13 8M278 68l-13 8" stroke-width="1"/>
-    </g>
-    <g fill="#0a1a28">
-      <rect x="24" y="72" width="4" height="13"/><rect x="78" y="72" width="4" height="13"/>
-      <rect x="130" y="72" width="4" height="13"/><rect x="176" y="76" width="4" height="12"/>
-      <rect x="226" y="76" width="4" height="12"/><rect x="274" y="76" width="4" height="12"/>
-    </g>
-    <g fill="#f3c79a" opacity=".9">
-      <circle cx="26" cy="71" r=".9"/><circle cx="80" cy="71" r=".9"/><circle cx="132" cy="71" r=".9"/>
-      <circle cx="178" cy="75" r=".9"/><circle cx="228" cy="75" r=".9"/><circle cx="276" cy="75" r=".9"/>
+    <g stroke="#7f97b2" stroke-width="0.8" opacity="0.6">
+      <path d="M14 86H44M58 92H90M100 86H122M26 98H62M74 98H106"/>
     </g>
   </svg>`,
-  cyclone: `<svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="gc1" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b4150"/><stop offset="1" stop-color="#14707f"/>
-    </linearGradient></defs>
-    <rect width="315" height="96" fill="url(#gc1)"/>
-    <g fill="none" stroke="#1d6b7a" stroke-width=".8" opacity=".45">
-      <path d="M0 18h315M0 42h315M0 66h315M0 90h315" stroke-dasharray="16 12"/>
+  cyclone: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#0c3742"/>
+    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="#c9bda3"/>
+    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="none" stroke="#8f9f92" stroke-width="0.6" opacity="0.6"/>
+    ${[0, 1, 2].map((i) => `<path d="${spiral(50, 49, 0.86, 4 + i * 8, 13 + i * 8)}" fill="none" stroke="${i === 1 ? '#9ec9c6' : '#eef4f2'}" stroke-width="${i === 1 ? 1.4 : 2.6}" stroke-linecap="round" opacity="${i === 1 ? 0.75 : 0.95}" transform="rotate(${i * 28} 50 49)"/>`).join('')}
+    <circle cx="50" cy="49" r="2.2" fill="#e0662f"/>
+    <g stroke="#b9d4d6" stroke-width="0.6" opacity="0.45">
+      <path d="M6 14L2 22M18 8L14 16M32 6L28 14M70 96L66 104M84 94L80 102"/>
     </g>
-    <path d="M226 96C244 74 250 55 268 39C282 26 300 17 315 12V96Z" fill="#27492f"/>
-    <path d="M226 96C244 74 250 55 268 39C282 26 300 17 315 12" fill="none" stroke="#a3c08c" stroke-width="1.4"/>
-    <g fill="none" stroke="#f2fbfa" stroke-linecap="round" transform="translate(196 46)">
-      <path d="${spiral(0, 0, 0.92, 7, 19)}" stroke-width="3.4"/>
-      <path d="${spiral(0, 0, 0.84, 19, 30)}" stroke-width="2.6" opacity=".85"/>
-      <path d="${spiral(0, 0, 0.78, 30, 40)}" stroke-width="2" opacity=".55"/>
-    </g>
-    <circle cx="196" cy="46" r="3.2" fill="#ffc07a"/>
-    <circle cx="196" cy="46" r="6.8" fill="none" stroke="#ffc07a" stroke-width="1" opacity=".8"/>
-    <g stroke="#9fd0d4" stroke-width=".7" opacity=".4" stroke-linecap="round">
-      <path d="M14 10l-8 14M34 4l-9 16M56 8l-9 16M78 2l-9 16M100 8l-9 16M122 4l-8 14"/>
-      <path d="M244 86l-8 14M266 90l-8 14M288 84l-8 14M308 92l-7 12"/>
-      <path d="M12 52l-7 12M70 56l-7 12M128 52l-7 12M196 88l-7 12"/>
-    </g>
-    <g>
-      <path d="M140 20L226 62" stroke="#f3c79a" stroke-width="1" stroke-dasharray="3 4" opacity=".8"/>
-      <circle cx="226" cy="62" r="5.2" fill="none" stroke="#f3c79a" stroke-width="1.3"/>
-      <circle cx="226" cy="62" r="2" fill="#f3c79a"/>
-      <path d="M226 56V44l8 3-8 3" fill="#f3c79a"/>
-    </g>
+    <circle cx="88" cy="62" r="2.4" fill="#e0662f"/>
+    <circle cx="88" cy="62" r="5" fill="none" stroke="#e0662f" stroke-width="0.8" opacity="0.55"/>
   </svg>`,
-  market: `<svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
-    <defs><linearGradient id="gm1" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#331811"/><stop offset="1" stop-color="#4b2418"/>
-    </linearGradient></defs>
-    <rect width="315" height="96" fill="url(#gm1)"/>
-    <g stroke="#f7f3ea" stroke-width=".6" opacity=".07">
-      <path d="M0 16h315M0 32h315M0 48h315M0 64h315M0 80h315"/>
-      <path d="M26 0v96M78 0v96M130 0v96M182 0v96M234 0v96M286 0v96"/>
+  market: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#191411"/>
+    <g stroke="#3b332b" stroke-width="0.6" stroke-dasharray="2 3">
+      <path d="M6 24H122M6 48H122M6 72H122M6 94H122"/>
     </g>
-    <path d="M28 18L60 26L92 22L124 36L156 42L188 52L220 58L252 64L284 74L310 84V96H28Z" fill="#e0552c" opacity=".22"/>
-    <g stroke="#e0662f" stroke-width="1">
-      <path d="M44 20v14M66 24v16M88 24v18M110 32v18M132 38v18M154 42v18M176 48v20M198 54v18M220 58v20M242 62v18M264 66v20M286 70v18M302 76v18"/>
+    <g stroke="#6b6055" stroke-width="1" fill="none" stroke-linejoin="round" stroke-dasharray="3 3" opacity="0.5">
+      <path d="M6 20L20 22L34 19L48 30L62 34L76 48L90 60L104 62L122 82"/>
     </g>
-    <g>
-      <rect x="41" y="23" width="7" height="8" fill="#d9553a"/><rect x="63" y="28" width="7" height="9" fill="#f3c79a"/>
-      <rect x="85" y="28" width="7" height="11" fill="#d9553a"/><rect x="107" y="36" width="7" height="10" fill="#d9553a"/>
-      <rect x="129" y="42" width="7" height="10" fill="#f3c79a"/><rect x="151" y="46" width="7" height="11" fill="#d9553a"/>
-      <rect x="173" y="52" width="7" height="12" fill="#d9553a"/><rect x="195" y="58" width="7" height="10" fill="#f3c79a"/>
-      <rect x="217" y="62" width="7" height="12" fill="#d9553a"/><rect x="239" y="66" width="7" height="11" fill="#d9553a"/>
-      <rect x="261" y="70" width="7" height="12" fill="#f3c79a"/><rect x="283" y="74" width="7" height="10" fill="#d9553a"/>
-    </g>
-    <path d="M28 18L60 26L92 22L124 36L156 42L188 52L220 58L252 64L284 74L310 84" fill="none" stroke="#ff8a6b" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="M286 72h16l-8 14z" fill="#ff8a6b"/>
+    ${candles}
   </svg>`,
 };
 
@@ -259,7 +184,7 @@ const leadBlock = (l, i) => `
   <article class="lead">
     <div class="panel">
       <div class="panel-txt">
-        <div class="pkrow"><span class="pk">${esc(l.kicker)}</span>${chip(l.n)}</div>
+        <div class="pk">${esc(l.kicker)}</div>
         <div class="pfig">${esc(l.fig)}</div>
         <div class="punit">${esc(l.figUnit)}</div>
         <div class="psub">${esc(l.figSub)}</div>
@@ -276,7 +201,7 @@ const cardBlock = (c) => {
   const g = GLYPH[GLYPH_BY_STORY[c.n]] ?? '';
   return `
   <article class="card" style="--gc:${regionOf(region)[1]}">
-    <div class="chead"><span class="ck">${esc(c.kicker)}</span>${chip(c.n)}<span class="cg">${g}</span></div>
+    <div class="chead"><span class="ck">${esc(c.kicker)}</span><span class="cg">${g}</span></div>
     <h4>${esc(c.head)}</h4>
     <p>${esc(c.hook)}</p>
     <div class="src">${esc(c.src)}</div>
@@ -331,15 +256,13 @@ const html = `<!doctype html>
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
   .panel { position:relative; display:flex; height:96px; overflow:hidden; background:#16304f }
-  .panel .part { position:absolute; inset:0 }
-  .panel .part svg { display:block; width:100%; height:96px }
-  .panel::after { content:''; position:absolute; inset:0; z-index:1;
-    background:linear-gradient(90deg, rgba(9,22,38,.98) 26%, rgba(9,22,38,.8) 48%, rgba(9,22,38,0) 74%) }
-  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(7,44,54,.98) 26%, rgba(7,44,54,.8) 48%, rgba(7,44,54,0) 74%) }
-  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(34,16,12,.98) 26%, rgba(34,16,12,.8) 48%, rgba(34,16,12,0) 74%) }
+  .panel .part { position:absolute; right:0; top:0; width:124px; height:96px }
+  .panel .part svg { display:block; width:124px; height:96px }
+  .panel::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(19,37,60,.97) 34%, rgba(19,37,60,0) 68%); z-index:1 }
+  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(11,68,83,.97) 34%, rgba(11,68,83,0) 68%) }
+  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(52,26,21,.97) 34%, rgba(52,26,21,0) 68%) }
   .panel-txt { position:relative; z-index:2; padding:3px 0 3px 8px; width:100%; color:#f7f3ea;
     display:flex; flex-direction:column }
-  .pkrow { display:flex; align-items:center; gap:5px }
   .pk { font-size:7.4px; letter-spacing:.13em; text-transform:uppercase; color:#f3c79a; font-weight:700 }
   .pfig { font-family:Georgia,serif; font-size:29px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
   .punit { font-size:8.2px; letter-spacing:.05em; text-transform:uppercase; color:#ece3d5; margin-top:1px }
@@ -375,12 +298,7 @@ const html = `<!doctype html>
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
   .card { padding:1px 0 1px; border-top:2px solid var(--gc); min-width:0 }
   .chead { display:flex; justify-content:space-between; align-items:center; gap:4px; min-height:28px }
-  .ck { flex:1 1 auto; min-width:0; font-size:6.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
-  .bdg { display:inline-block; flex:0 0 auto; font-size:6.5px; line-height:1; letter-spacing:.08em;
-    font-weight:700; text-transform:uppercase; padding:2px 3px 1.5px; border:.6px solid currentColor; white-space:nowrap }
-  .bdg.o { color:#2c6446; background:#e4eee3; border-color:#b4cbb6 }
-  .bdg.c { color:#2a4f78; background:#e4ecf5; border-color:#bccfe2 }
-  .bdg.r { color:#7b5b2c; background:#f2e8d6; border-color:#dbc6a0 }
+  .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
   .cg { flex:0 0 28px; width:28px; height:28px; color:var(--gc) }
   .cg svg { display:block; width:28px; height:28px }
   .card h4 { font-family:Georgia,serif; font-size:12.1px; line-height:1.04; letter-spacing:-.01em; margin:1px 0 }
@@ -453,9 +371,7 @@ const html = `<!doctype html>
   <footer class="foot">
     <p><b>Date check.</b> Every story above is dated 20 November 2026: the thirteen in the hour strip were filed in UTC
       that day, the rest carry that day&rsquo;s dateline in their own time zone. Nothing here is from an earlier or later day.
-      Chips show sourcing: <b>OFFICIAL</b> where the outlet is the body that issued the report, <b>CONFIRMED</b>
-      where the edition worked from a published article, <b>REPORTED</b> where it worked from the outlet's sources.
-      The map is drawn from Natural Earth land outlines.</p>
+      Outlets are named with each story; the map is drawn from Natural Earth land outlines.</p>
     <div class="mark">One day &middot; 35 stories &middot; 7 regions</div>
   </footer>
 </body></html>`;
