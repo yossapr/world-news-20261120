@@ -133,6 +133,22 @@ const ART = {
   </svg>`,
 };
 
+
+// ---- ten small flat glyphs, one per card, in the region's colour ----
+const GLYPH = {
+  flag: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5v19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6.6 4h11.6l-2.8 3.7 2.8 3.7H6.6z" fill="currentColor"/><path d="M6.6 12.6h8.6l-2.2 3 2.2 3H6.6z" fill="currentColor" opacity=".55"/></svg>`,
+  leaf: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5.8 16.2 5.4 9.2 12 3c6.6 6.2 6.2 13.2 0 18z" fill="currentColor"/><path d="M12 20V8.5M12 12.5l3-2.5M12 16l-2.6-2.2" stroke="#f7f3ea" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>`,
+  missile: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.3 2.8 3.4 5.9 3.4 9.4V16H8.6v-4.6C8.6 7.9 9.7 4.8 12 2z" fill="currentColor"/><path d="M8.6 12.6 5.6 17v4l3-2.2M15.4 12.6 18.4 17v4l-3-2.2" fill="currentColor"/><path d="M10.4 16.6h3.2L12 21.6z" fill="#e0662f"/></svg>`,
+  shield: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2 20 5v6.3c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M12 6.2v9.6M9.4 9.6h5.2" stroke="#f7f3ea" stroke-width="1.4" stroke-linecap="round"/></svg>`,
+  megaphone: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.4 15.4 4.6v14.8L3 13.6z" fill="currentColor"/><path d="M15.4 9.2c2.2.7 3.4 1.8 3.4 3.3s-1.2 2.6-3.4 3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.4 14.2v4.2h3.1v-3.2" fill="currentColor" opacity=".7"/></svg>`,
+  inflation: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h3.2v-5.2H3.5zM10.4 20.5h3.2v-9.4h-3.2zM17.3 20.5h3.2V6.8h-3.2z" fill="currentColor" opacity=".85"/><path d="M4 9.4l5.8-4 3.6 1.8L20.4 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.6 2h3.8v3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  gavel: `<svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-38 12 7.5)"><rect x="5.4" y="4.4" width="13.2" height="5.4" rx="1.1" fill="currentColor"/><rect x="10.9" y="9.6" width="2.2" height="12.4" rx="1" fill="currentColor"/></g></svg>`,
+  derrick: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5.6 20.5M12 2l6.4 18.5M8 14.6h8M9.3 9.7h5.4M6.6 19.6h10.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19.4 12.4c1.5 1.9 2.2 3.1 2.2 4.1a2.2 2.2 0 0 1-4.4 0c0-1 .7-2.2 2.2-4.1z" fill="#e0662f"/></svg>`,
+  ballot: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.4" width="16" height="11.6" rx="1.2" fill="currentColor"/><rect x="9.2" y="2.6" width="9.4" height="9.2" rx="1" fill="currentColor" opacity=".6"/><path d="M11 7.1l1.9 1.9 3.4-3.4" fill="none" stroke="#f7f3ea" stroke-width="1.6" stroke-linecap="round"/><rect x="10.2" y="13.2" width="4.4" height="1.5" fill="#f7f3ea"/></svg>`,
+  ball: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4" fill="currentColor"/><path d="M6.4 6.6c3 1.1 4.6 3.1 5.7 4.9M17.6 17.4c-3-1.1-4.6-3.1-5.7-4.9" fill="none" stroke="#f7f3ea" stroke-width="1.3" stroke-linecap="round"/><g stroke="#f7f3ea" stroke-width="1"><path d="M7.4 8.2 6.4 7.4M8.9 9.7l-1-.8M10.4 11.2l-1-.8M16.6 15.8l1 .8M15.1 14.3l1 .8M13.6 12.8l1 .8"/></g></svg>`,
+};
+const GLYPH_BY_STORY = { 4: 'flag', 5: 'leaf', 6: 'missile', 7: 'shield', 8: 'megaphone', 9: 'inflation', 10: 'gavel', 11: 'derrick', 12: 'ballot', 13: 'ball' };
+
 const leadBlock = (l, i) => `
   <article class="lead">
     <div class="panel">
@@ -149,15 +165,19 @@ const leadBlock = (l, i) => `
     <div class="src">${esc(l.src)}</div>
   </article>`;
 
-const cardBlock = (c) => `
-  <article class="card">
-    <div class="ck">${esc(c.kicker)}</div>
+const cardBlock = (c) => {
+  const region = by(c.n).region;
+  const g = GLYPH[GLYPH_BY_STORY[c.n]] ?? '';
+  return `
+  <article class="card" style="--gc:${regionOf(region)[1]}">
+    <div class="chead"><span class="ck">${esc(c.kicker)}</span><span class="cg">${g}</span></div>
     <h4>${esc(c.head)}</h4>
     <p>${esc(c.hook)}</p>
     <div class="src">${esc(c.src)}</div>
   </article>`;
+};
 
-const briefLi = (b) => `<li><b>${esc(b.place)}</b> ${esc(b.text)} <span class="bs">${esc(b.src)}</span></li>`;
+const briefLi = (b) => `<li style="--gc:${regionOf(by(b.n).region)[1]}"><b>${esc(b.place)}</b> ${esc(b.text)} <span class="bs">${esc(b.src)}</span></li>`;
 // column-major so each of the three columns is full and the last row is never ragged
 const per = Math.ceil(briefs.length / 3);
 const long = briefs.length - per * 3 + 3; // first `long` columns take one extra
@@ -191,22 +211,22 @@ const html = `<!doctype html>
 
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
-  .panel { position:relative; display:flex; height:98px; overflow:hidden; background:#13253c }
-  .panel .part { position:absolute; right:0; top:0; width:120px; height:98px }
-  .panel .part svg { display:block; width:120px; height:98px }
+  .panel { position:relative; display:flex; height:100px; overflow:hidden; background:#16304f }
+  .panel .part { position:absolute; right:0; top:0; width:124px; height:100px }
+  .panel .part svg { display:block; width:124px; height:100px }
   .panel::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(19,37,60,.97) 34%, rgba(19,37,60,0) 68%); z-index:1 }
-  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(12,55,66,.97) 34%, rgba(12,55,66,0) 68%) }
-  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(25,20,17,.97) 34%, rgba(25,20,17,0) 68%) }
+  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(11,68,83,.97) 34%, rgba(11,68,83,0) 68%) }
+  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(52,26,21,.97) 34%, rgba(52,26,21,0) 68%) }
   .panel-txt { position:relative; z-index:2; padding:5px 0 5px 8px; width:100%; color:#f7f3ea;
     display:flex; flex-direction:column }
   .pk { font-size:7.4px; letter-spacing:.13em; text-transform:uppercase; color:#f3c79a; font-weight:700 }
-  .pfig { font-family:Georgia,serif; font-size:26px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
+  .pfig { font-family:Georgia,serif; font-size:29px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
   .punit { font-size:8.2px; letter-spacing:.05em; text-transform:uppercase; color:#ece3d5; margin-top:1px }
-  .psub { font-size:7.5px; line-height:1.18; color:#bcc9d2; margin-top:1px; max-width:66% }
+  .psub { font-size:7.5px; line-height:1.18; color:#c7d2da; margin-top:1px; max-width:62% }
   .lead:nth-child(2) .pk { color:#bfe3e0 }
   .lead:nth-child(3) .pk { color:#f3c79a }
 
-  .lead h3 { font-family:Georgia,serif; font-size:21px; line-height:1.03; letter-spacing:-.018em; margin:5px 0 2px }
+  .lead h3 { font-family:Georgia,serif; font-size:24px; line-height:1.01; letter-spacing:-.018em; margin:5px 0 2px }
   .lead .deck { font-size:9.8px; line-height:1.22; color:#332d26; min-height:24px }
   .src { font-size:7.4px; letter-spacing:.055em; text-transform:uppercase; color:#8a8074; margin-top:2px }
 
@@ -232,8 +252,11 @@ const html = `<!doctype html>
   .ns { color:#a89c8d; font-size:6.4px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
 
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
-  .card { padding:3px 0 4px; border-bottom:1px solid var(--soft); min-width:0 }
-  .ck { font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .card { padding:4px 0 4px; border-top:2px solid var(--gc); min-width:0 }
+  .chead { display:flex; justify-content:space-between; align-items:center; gap:5px }
+  .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .cg { flex:0 0 21px; width:21px; height:21px; color:var(--gc) }
+  .cg svg { display:block; width:21px; height:21px }
   .card h4 { font-family:Georgia,serif; font-size:12.4px; line-height:1.06; letter-spacing:-.01em; margin:1px 0 }
   .card p { font-size:9px; line-height:1.18; color:#4a433b }
   .card .src { margin-top:1px }
@@ -251,8 +274,8 @@ const html = `<!doctype html>
   .briefs { flex:1; min-height:0; border-top:1px solid var(--soft); padding:5px 0 4px; margin-top:3px;
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 16px }
   ul.b { list-style:none; display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
-  ul.b li { font-size:10.5px; line-height:1.23; color:#2b2620; padding-left:9px; position:relative }
-  ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3px; height:3px; background:var(--accent) }
+  ul.b li { font-size:10.5px; line-height:1.16; color:#2b2620; padding-left:9px; position:relative }
+  ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3.5px; height:3.5px; background:var(--gc) }
   ul.b li b { font-weight:700 }
   .bs { color:#8a8074; font-size:7px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap }
 

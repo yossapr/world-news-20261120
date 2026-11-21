@@ -22,22 +22,22 @@
 
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
-  .panel { position:relative; display:flex; height:98px; overflow:hidden; background:#13253c }
-  .panel .part { position:absolute; right:0; top:0; width:120px; height:98px }
-  .panel .part svg { display:block; width:120px; height:98px }
+  .panel { position:relative; display:flex; height:100px; overflow:hidden; background:#16304f }
+  .panel .part { position:absolute; right:0; top:0; width:124px; height:100px }
+  .panel .part svg { display:block; width:124px; height:100px }
   .panel::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(19,37,60,.97) 34%, rgba(19,37,60,0) 68%); z-index:1 }
-  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(12,55,66,.97) 34%, rgba(12,55,66,0) 68%) }
-  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(25,20,17,.97) 34%, rgba(25,20,17,0) 68%) }
+  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(11,68,83,.97) 34%, rgba(11,68,83,0) 68%) }
+  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(52,26,21,.97) 34%, rgba(52,26,21,0) 68%) }
   .panel-txt { position:relative; z-index:2; padding:5px 0 5px 8px; width:100%; color:#f7f3ea;
     display:flex; flex-direction:column }
   .pk { font-size:7.4px; letter-spacing:.13em; text-transform:uppercase; color:#f3c79a; font-weight:700 }
-  .pfig { font-family:Georgia,serif; font-size:26px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
+  .pfig { font-family:Georgia,serif; font-size:29px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
   .punit { font-size:8.2px; letter-spacing:.05em; text-transform:uppercase; color:#ece3d5; margin-top:1px }
-  .psub { font-size:7.5px; line-height:1.18; color:#bcc9d2; margin-top:1px; max-width:66% }
+  .psub { font-size:7.5px; line-height:1.18; color:#c7d2da; margin-top:1px; max-width:62% }
   .lead:nth-child(2) .pk { color:#bfe3e0 }
   .lead:nth-child(3) .pk { color:#f3c79a }
 
-  .lead h3 { font-family:Georgia,serif; font-size:21px; line-height:1.03; letter-spacing:-.018em; margin:5px 0 2px }
+  .lead h3 { font-family:Georgia,serif; font-size:24px; line-height:1.01; letter-spacing:-.018em; margin:5px 0 2px }
   .lead .deck { font-size:9.8px; line-height:1.22; color:#332d26; min-height:24px }
   .src { font-size:7.4px; letter-spacing:.055em; text-transform:uppercase; color:#8a8074; margin-top:2px }
 
@@ -63,8 +63,11 @@
   .ns { color:#a89c8d; font-size:6.4px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
 
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
-  .card { padding:3px 0 4px; border-bottom:1px solid var(--soft); min-width:0 }
-  .ck { font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .card { padding:4px 0 4px; border-top:2px solid var(--gc); min-width:0 }
+  .chead { display:flex; justify-content:space-between; align-items:center; gap:5px }
+  .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .cg { flex:0 0 21px; width:21px; height:21px; color:var(--gc) }
+  .cg svg { display:block; width:21px; height:21px }
   .card h4 { font-family:Georgia,serif; font-size:12.4px; line-height:1.06; letter-spacing:-.01em; margin:1px 0 }
   .card p { font-size:9px; line-height:1.18; color:#4a433b }
   .card .src { margin-top:1px }
@@ -82,8 +85,8 @@
   .briefs { flex:1; min-height:0; border-top:1px solid var(--soft); padding:5px 0 4px; margin-top:3px;
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 16px }
   ul.b { list-style:none; display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
-  ul.b li { font-size:10.5px; line-height:1.23; color:#2b2620; padding-left:9px; position:relative }
-  ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3px; height:3px; background:var(--accent) }
+  ul.b li { font-size:10.5px; line-height:1.16; color:#2b2620; padding-left:9px; position:relative }
+  ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3.5px; height:3.5px; background:var(--gc) }
   ul.b li b { font-weight:700 }
   .bs { color:#8a8074; font-size:7px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap }
 
@@ -210,62 +213,62 @@
   </section>
 
   <section class="cards">
-  <article class="card">
-    <div class="ck">BRUSSELS · DIPLOMACY</div>
+  <article class="card" style="--gc:#1f4e79">
+    <div class="chead"><span class="ck">BRUSSELS · DIPLOMACY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5v19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6.6 4h11.6l-2.8 3.7 2.8 3.7H6.6z" fill="currentColor"/><path d="M6.6 12.6h8.6l-2.2 3 2.2 3H6.6z" fill="currentColor" opacity=".55"/></svg></span></div>
     <h4>UK and EU seal a reset deal</h4>
     <p>Food trade, youth visas and a carbon link, agreed in Brussels.</p>
     <div class="src">Reuters</div>
   </article>
-  <article class="card">
-    <div class="ck">ANTALYA · CLIMATE</div>
+  <article class="card" style="--gc:#1f4e79">
+    <div class="chead"><span class="ck">ANTALYA · CLIMATE</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5.8 16.2 5.4 9.2 12 3c6.6 6.2 6.2 13.2 0 18z" fill="currentColor"/><path d="M12 20V8.5M12 12.5l3-2.5M12 16l-2.6-2.2" stroke="#f7f3ea" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span></div>
     <h4>COP31: no deal on its last day</h4>
     <p>The draft leaves out fossil fuels; France and Panama object.</p>
     <div class="src">UN News</div>
   </article>
-  <article class="card">
-    <div class="ck">EASTERN POLAND · SECURITY</div>
+  <article class="card" style="--gc:#1f4e79">
+    <div class="chead"><span class="ck">EASTERN POLAND · SECURITY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.3 2.8 3.4 5.9 3.4 9.4V16H8.6v-4.6C8.6 7.9 9.7 4.8 12 2z" fill="currentColor"/><path d="M8.6 12.6 5.6 17v4l3-2.2M15.4 12.6 18.4 17v4l-3-2.2" fill="currentColor"/><path d="M10.4 16.6h3.2L12 21.6z" fill="#e0662f"/></svg></span></div>
     <h4>A Russian missile lands in Poland</h4>
     <p>It fell in a field; Tusk called it a provocation.</p>
     <div class="src">Reuters</div>
   </article>
-  <article class="card">
-    <div class="ck">CENTRAL IRAQ · SECURITY</div>
+  <article class="card" style="--gc:#8a5a1b">
+    <div class="chead"><span class="ck">CENTRAL IRAQ · SECURITY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2 20 5v6.3c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M12 6.2v9.6M9.4 9.6h5.2" stroke="#f7f3ea" stroke-width="1.4" stroke-linecap="round"/></svg></span></div>
     <h4>Iraqi troops enter a militia town</h4>
     <p>The army deployed to Jurf al-Sakhar.</p>
     <div class="src">Reuters</div>
   </article>
-  <article class="card">
-    <div class="ck">ITALY · LABOUR</div>
+  <article class="card" style="--gc:#1f4e79">
+    <div class="chead"><span class="ck">ITALY · LABOUR</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.4 15.4 4.6v14.8L3 13.6z" fill="currentColor"/><path d="M15.4 9.2c2.2.7 3.4 1.8 3.4 3.3s-1.2 2.6-3.4 3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.4 14.2v4.2h3.1v-3.2" fill="currentColor" opacity=".7"/></svg></span></div>
     <h4>Italy strikes over the budget</h4>
     <p>Workers and students march as anger at Meloni grows.</p>
     <div class="src">Reuters</div>
   </article>
-  <article class="card">
-    <div class="ck">TOKYO · ECONOMY</div>
+  <article class="card" style="--gc:#a8321f">
+    <div class="chead"><span class="ck">TOKYO · ECONOMY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h3.2v-5.2H3.5zM10.4 20.5h3.2v-9.4h-3.2zM17.3 20.5h3.2V6.8h-3.2z" fill="currentColor" opacity=".85"/><path d="M4 9.4l5.8-4 3.6 1.8L20.4 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.6 2h3.8v3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>
     <h4>Japan’s inflation climbs to 2.3%</h4>
     <p>Food and energy costs rise; a December rate rise stays in view.</p>
     <div class="src">Reuters</div>
   </article>
-  <article class="card">
-    <div class="ck">SEOUL · POLITICS</div>
+  <article class="card" style="--gc:#a8321f">
+    <div class="chead"><span class="ck">SEOUL · POLITICS</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-38 12 7.5)"><rect x="5.4" y="4.4" width="13.2" height="5.4" rx="1.1" fill="currentColor"/><rect x="10.9" y="9.6" width="2.2" height="12.4" rx="1" fill="currentColor"/></g></svg></span></div>
     <h4>Korea moves to impeach its top judge</h4>
     <p>The ruling party acts after a conviction is overturned.</p>
     <div class="src">Korea Herald</div>
   </article>
-  <article class="card">
-    <div class="ck">TURKANA, KENYA · ENERGY</div>
+  <article class="card" style="--gc:#1c6b4a">
+    <div class="chead"><span class="ck">TURKANA, KENYA · ENERGY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5.6 20.5M12 2l6.4 18.5M8 14.6h8M9.3 9.7h5.4M6.6 19.6h10.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19.4 12.4c1.5 1.9 2.2 3.1 2.2 4.1a2.2 2.2 0 0 1-4.4 0c0-1 .7-2.2 2.2-4.1z" fill="#e0662f"/></svg></span></div>
     <h4>Kenya drills its first oil well</h4>
     <p>Turkana crude is due to flow on 1 December.</p>
     <div class="src">allAfrica</div>
   </article>
-  <article class="card">
-    <div class="ck">SAN SALVADOR · POLITICS</div>
+  <article class="card" style="--gc:#5a3a86">
+    <div class="chead"><span class="ck">SAN SALVADOR · POLITICS</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.4" width="16" height="11.6" rx="1.2" fill="currentColor"/><rect x="9.2" y="2.6" width="9.4" height="9.2" rx="1" fill="currentColor" opacity=".6"/><path d="M11 7.1l1.9 1.9 3.4-3.4" fill="none" stroke="#f7f3ea" stroke-width="1.6" stroke-linecap="round"/><rect x="10.2" y="13.2" width="4.4" height="1.5" fill="#f7f3ea"/></svg></span></div>
     <h4>Bukele files for a third term</h4>
     <p>El Salvador votes on 28 February 2027.</p>
     <div class="src">AP</div>
   </article>
-  <article class="card">
-    <div class="ck">WELLINGTON · CRICKET</div>
+  <article class="card" style="--gc:#0d6070">
+    <div class="chead"><span class="ck">WELLINGTON · CRICKET</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4" fill="currentColor"/><path d="M6.4 6.6c3 1.1 4.6 3.1 5.7 4.9M17.6 17.4c-3-1.1-4.6-3.1-5.7-4.9" fill="none" stroke="#f7f3ea" stroke-width="1.3" stroke-linecap="round"/><g stroke="#f7f3ea" stroke-width="1"><path d="M7.4 8.2 6.4 7.4M8.9 9.7l-1-.8M10.4 11.2l-1-.8M16.6 15.8l1 .8M15.1 14.3l1 .8M13.6 12.8l1 .8"/></g></svg></span></div>
     <h4>Phillips hits 118 against India</h4>
     <p>New Zealand closed on 317/6; Nicholls was 146 not out.</p>
     <div class="src">ICC</div>
@@ -278,7 +281,7 @@
   </section>
 
   <section class="briefs-head"><h5>And in brief <span>the rest of the day, place by place</span></h5><span class="cnt">22 more stories</span></section>
-  <section class="briefs"><ul class="b"><li><b>Lviv</b> A strike on Sknyliv station kills two and hurts four. <span class="bs">BBC</span></li><li><b>Moscow</b> Russia vows a reply as Estonia shuts their border road for six months. <span class="bs">Reuters</span></li><li><b>Berlin</b> School pupils strike against military service. <span class="bs">Al Jazeera</span></li><li><b>London</b> General says the UK runs cyber attacks abroad. <span class="bs">Sky News</span></li><li><b>Beijing</b> China holds its loan rate at 3.0% for an 18th month. <span class="bs">Xinhua</span></li><li><b>Tokyo</b> SoftBank closes 14.48% lower at ¥3,025. <span class="bs">Al Jazeera</span></li><li><b>Seoul</b> The Kospi ends the week 7.9% lower. <span class="bs">Anadolu</span></li><li><b>Ganjam</b> 209 mm of rain falls at Patrapur as Akvan crosses Odisha. <span class="bs">PTI</span></li></ul><ul class="b"><li><b>Lebanon</b> Israeli strikes hit south and east Lebanon; five near Janta. <span class="bs">Anadolu</span></li><li><b>Yemen</b> Gunmen fire on a cargo ship off the coast. <span class="bs">UKMTO</span></li><li><b>Abuja</b> A court bars the electoral body from elections. <span class="bs">Channels TV</span></li><li><b>Kampala</b> Police told to enforce the Ebola ban on rallies. <span class="bs">allAfrica</span></li><li><b>Malawi</b> Petrol queues all night; about $3.24 a litre. <span class="bs">Al Jazeera</span></li><li><b>Africa</b> The AfDB says 22 countries are in debt distress. <span class="bs">allAfrica</span></li><li><b>Las Vegas</b> Russell fastest in wet practice, 0.071 s clear. <span class="bs">Autosport</span></li></ul><ul class="b"><li><b>New York</b> Nasdaq futures fall 1.6% before the bell. <span class="bs">24/7 Wall St</span></li><li><b>Washington</b> Democrats question a law firm’s free work. <span class="bs">Al Jazeera</span></li><li><b>Wellington</b> Nicholls makes 175 in a stand of 216. <span class="bs">ICC</span></li><li><b>Sydney</b> Australian shares fall 1.6% in the sell-off. <span class="bs">Reuters</span></li><li><b>Ankara</b> Panama asks COP31 to cap world oil output. <span class="bs">Anadolu</span></li><li><b>Antalya</b> EU officials call the climate draft unacceptable. <span class="bs">RTE</span></li><li><b>Turin</b> ATP backs a plan to let live play pay $350m. <span class="bs">Mail on Sunday</span></li></ul></section>
+  <section class="briefs"><ul class="b"><li style="--gc:#1f4e79"><b>Lviv</b> A strike on Sknyliv station kills two and hurts four. <span class="bs">BBC</span></li><li style="--gc:#1f4e79"><b>Moscow</b> Russia vows a reply as Estonia shuts their border road for six months. <span class="bs">Reuters</span></li><li style="--gc:#1f4e79"><b>Berlin</b> School pupils strike against military service. <span class="bs">Al Jazeera</span></li><li style="--gc:#3d3d3d"><b>London</b> General says the UK runs cyber attacks abroad. <span class="bs">Sky News</span></li><li style="--gc:#a8321f"><b>Beijing</b> China holds its loan rate at 3.0% for an 18th month. <span class="bs">Xinhua</span></li><li style="--gc:#a8321f"><b>Tokyo</b> SoftBank closes 14.48% lower at ¥3,025. <span class="bs">Al Jazeera</span></li><li style="--gc:#a8321f"><b>Seoul</b> The Kospi ends the week 7.9% lower. <span class="bs">Anadolu</span></li><li style="--gc:#a8321f"><b>Ganjam</b> 209 mm of rain falls at Patrapur as Akvan crosses Odisha. <span class="bs">PTI</span></li></ul><ul class="b"><li style="--gc:#8a5a1b"><b>Lebanon</b> Israeli strikes hit south and east Lebanon; five near Janta. <span class="bs">Anadolu</span></li><li style="--gc:#8a5a1b"><b>Yemen</b> Gunmen fire on a cargo ship off the coast. <span class="bs">UKMTO</span></li><li style="--gc:#1c6b4a"><b>Abuja</b> A court bars the electoral body from elections. <span class="bs">Channels TV</span></li><li style="--gc:#1c6b4a"><b>Kampala</b> Police told to enforce the Ebola ban on rallies. <span class="bs">allAfrica</span></li><li style="--gc:#1c6b4a"><b>Malawi</b> Petrol queues all night; about $3.24 a litre. <span class="bs">Al Jazeera</span></li><li style="--gc:#1c6b4a"><b>Africa</b> The AfDB says 22 countries are in debt distress. <span class="bs">allAfrica</span></li><li style="--gc:#5a3a86"><b>Las Vegas</b> Russell fastest in wet practice, 0.071 s clear. <span class="bs">Autosport</span></li></ul><ul class="b"><li style="--gc:#5a3a86"><b>New York</b> Nasdaq futures fall 1.6% before the bell. <span class="bs">24/7 Wall St</span></li><li style="--gc:#5a3a86"><b>Washington</b> Democrats question a law firm’s free work. <span class="bs">Al Jazeera</span></li><li style="--gc:#0d6070"><b>Wellington</b> Nicholls makes 175 in a stand of 216. <span class="bs">ICC</span></li><li style="--gc:#0d6070"><b>Sydney</b> Australian shares fall 1.6% in the sell-off. <span class="bs">Reuters</span></li><li style="--gc:#3d3d3d"><b>Ankara</b> Panama asks COP31 to cap world oil output. <span class="bs">Anadolu</span></li><li style="--gc:#3d3d3d"><b>Antalya</b> EU officials call the climate draft unacceptable. <span class="bs">RTE</span></li><li style="--gc:#3d3d3d"><b>Turin</b> ATP backs a plan to let live play pay $350m. <span class="bs">Mail on Sunday</span></li></ul></section>
 
   <footer class="foot">
     <p><b>Every story above is dated Friday 20 November 2026</b> and attributed to the outlets named with it.
