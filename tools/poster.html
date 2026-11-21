@@ -36,13 +36,15 @@
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
   .panel { position:relative; display:flex; height:96px; overflow:hidden; background:#16304f }
-  .panel .part { position:absolute; right:0; top:0; width:124px; height:96px }
-  .panel .part svg { display:block; width:124px; height:96px }
-  .panel::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(19,37,60,.97) 34%, rgba(19,37,60,0) 68%); z-index:1 }
-  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(11,68,83,.97) 34%, rgba(11,68,83,0) 68%) }
-  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(52,26,21,.97) 34%, rgba(52,26,21,0) 68%) }
+  .panel .part { position:absolute; inset:0 }
+  .panel .part svg { display:block; width:100%; height:96px }
+  .panel::after { content:''; position:absolute; inset:0; z-index:1;
+    background:linear-gradient(90deg, rgba(9,22,38,.98) 26%, rgba(9,22,38,.8) 48%, rgba(9,22,38,0) 74%) }
+  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(7,44,54,.98) 26%, rgba(7,44,54,.8) 48%, rgba(7,44,54,0) 74%) }
+  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(34,16,12,.98) 26%, rgba(34,16,12,.8) 48%, rgba(34,16,12,0) 74%) }
   .panel-txt { position:relative; z-index:2; padding:3px 0 3px 8px; width:100%; color:#f7f3ea;
     display:flex; flex-direction:column }
+  .pkrow { display:flex; align-items:center; gap:5px }
   .pk { font-size:7.4px; letter-spacing:.13em; text-transform:uppercase; color:#f3c79a; font-weight:700 }
   .pfig { font-family:Georgia,serif; font-size:29px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
   .punit { font-size:8.2px; letter-spacing:.05em; text-transform:uppercase; color:#ece3d5; margin-top:1px }
@@ -78,7 +80,12 @@
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
   .card { padding:1px 0 1px; border-top:2px solid var(--gc); min-width:0 }
   .chead { display:flex; justify-content:space-between; align-items:center; gap:4px; min-height:28px }
-  .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .ck { flex:1 1 auto; min-width:0; font-size:6.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .bdg { display:inline-block; flex:0 0 auto; font-size:6.5px; line-height:1; letter-spacing:.08em;
+    font-weight:700; text-transform:uppercase; padding:2px 3px 1.5px; border:.6px solid currentColor; white-space:nowrap }
+  .bdg.o { color:#2c6446; background:#e4eee3; border-color:#b4cbb6 }
+  .bdg.c { color:#2a4f78; background:#e4ecf5; border-color:#bccfe2 }
+  .bdg.r { color:#7b5b2c; background:#f2e8d6; border-color:#dbc6a0 }
   .cg { flex:0 0 28px; width:28px; height:28px; color:var(--gc) }
   .cg svg { display:block; width:28px; height:28px }
   .card h4 { font-family:Georgia,serif; font-size:12.1px; line-height:1.04; letter-spacing:-.01em; margin:1px 0 }
@@ -131,27 +138,59 @@
   <article class="lead">
     <div class="panel">
       <div class="panel-txt">
-        <div class="pk">KYIV, UKRAINE · WAR</div>
+        <div class="pkrow"><span class="pk">KYIV, UKRAINE · WAR</span><span class="bdg r">REPORTED</span></div>
         <div class="pfig">110</div>
         <div class="punit">missiles and 400 drones</div>
         <div class="psub">at least nine killed; three bridges in Kyiv</div>
       </div>
-      <div class="part"><svg viewBox="0 0 128 104" aria-hidden="true">
-    <rect width="128" height="104" fill="#13253c"/>
-    <g stroke="#e0662f" stroke-width="1" stroke-linecap="round" opacity="0.95">
-      <path d="M88 4L74 30"/><path d="M100 2L86 32"/><path d="M112 8L98 34"/><path d="M76 2L64 24"/>
+      <div class="part"><svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="gb1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0a1a30"/><stop offset=".5" stop-color="#1b3a5d"/><stop offset="1" stop-color="#0e2438"/>
+    </linearGradient></defs>
+    <rect width="315" height="96" fill="url(#gb1)"/>
+    <ellipse cx="250" cy="70" rx="120" ry="34" fill="#2a5a7d" opacity=".28"/>
+    <g fill="#060f1b" opacity=".92">
+      <rect x="0" y="56" width="20" height="16"/><rect x="26" y="50" width="12" height="22"/>
+      <rect x="238" y="48" width="16" height="24"/><rect x="258" y="42" width="10" height="30"/>
+      <rect x="272" y="52" width="18" height="20"/><rect x="294" y="46" width="12" height="26"/>
     </g>
-    <g fill="#f0b24a"><circle cx="74" cy="30" r="1.7"/><circle cx="86" cy="32" r="1.7"/><circle cx="98" cy="34" r="1.7"/><circle cx="64" cy="24" r="1.5"/></g>
-    <path d="M0 78H128" stroke="#aebfd2" stroke-width="1.5"/>
-    <g fill="none" stroke="#e4ebf3" stroke-width="1.3">
-      <path d="M2 78C2 62 28 62 28 78"/><path d="M34 78C34 54 66 54 66 78"/><path d="M72 78C72 62 98 62 98 78"/><path d="M104 78C104 66 124 66 124 78"/>
+    <g fill="none" stroke="#ffc775" stroke-linecap="round">
+      <path d="M314 -6C296 24 236 38 152 56" stroke-width="2.1" opacity=".95"/>
+      <path d="M316 12C292 38 238 50 174 62" stroke-width="1.2" opacity=".8"/>
+      <path d="M302 -8C278 16 222 32 130 50" stroke-width="1" opacity=".7"/>
+      <path d="M318 34C302 50 264 60 222 68" stroke-width="1" opacity=".55"/>
     </g>
-    <g stroke="#dbe3ec" stroke-width="0.6" opacity="0.85">
-      <path d="M15 78V67M59 78V62M85 78V67M114 78V70"/>
-      <path d="M2 70H28M34 64H66M72 70H98M104 73H124"/>
+    <g fill="#ffd9a0">
+      <circle cx="152" cy="56" r="3.2"/><circle cx="174" cy="62" r="2.4"/>
+      <circle cx="130" cy="50" r="1.9"/><circle cx="222" cy="68" r="1.7"/>
     </g>
-    <g stroke="#7f97b2" stroke-width="0.8" opacity="0.6">
-      <path d="M14 86H44M58 92H90M100 86H122M26 98H62M74 98H106"/>
+    <g stroke="#f6c27a" stroke-width=".9" opacity=".85">
+      <path d="M152 56l-8-5M152 56l9-4M152 56l-6 7M152 56l10 5"/>
+      <path d="M174 62l-7-4M174 62l8 3M174 62l-4 6"/>
+    </g>
+    <rect x="0" y="70" width="315" height="26" fill="#16405a"/>
+    <g fill="#f3c79a" opacity=".55"><rect x="240" y="58" width="2" height="3"/><rect x="248" y="54" width="2" height="3"/><rect x="258" y="60" width="2" height="3"/><rect x="274" y="56" width="2" height="3"/><rect x="284" y="62" width="2" height="3"/><rect x="298" y="54" width="2" height="3"/><rect x="6" y="60" width="2" height="3"/><rect x="14" y="56" width="2" height="3"/></g>
+    <g stroke="#2c5f79" stroke-width=".8" opacity=".6">
+      <path d="M8 78h26M46 84h34M96 79h30M152 87h44M208 81h26M252 89h40M300 83h12"/>
+    </g>
+    <g fill="none" stroke="#040c15" stroke-linejoin="round">
+      <path d="M16 72h142" stroke-width="3.4"/><path d="M166 76h134" stroke-width="3.2"/>
+      <path d="M16 70.6h142M166 74.6h134" stroke="#5b8bab" stroke-width=".7"/>
+      <path d="M24 72v-9M52 72v-12M80 72v-12M108 72v-12M136 72v-9" stroke-width="1.5"/>
+      <path d="M24 63h112" stroke-width="1.2"/>
+      <path d="M24 63l14 9M52 63l14 9M66 63l14 9M94 63l14 9M108 63l14 9M136 63l-14 9" stroke-width="1"/>
+      <path d="M174 76v-8M200 76v-10M226 76v-10M252 76v-10M278 76v-8" stroke-width="1.5"/>
+      <path d="M174 68h104" stroke-width="1.2"/>
+      <path d="M174 68l13 8M200 68l13 8M213 68l13 8M239 68l13 8M252 68l13 8M278 68l-13 8" stroke-width="1"/>
+    </g>
+    <g fill="#0a1a28">
+      <rect x="24" y="72" width="4" height="13"/><rect x="78" y="72" width="4" height="13"/>
+      <rect x="130" y="72" width="4" height="13"/><rect x="176" y="76" width="4" height="12"/>
+      <rect x="226" y="76" width="4" height="12"/><rect x="274" y="76" width="4" height="12"/>
+    </g>
+    <g fill="#f3c79a" opacity=".9">
+      <circle cx="26" cy="71" r=".9"/><circle cx="80" cy="71" r=".9"/><circle cx="132" cy="71" r=".9"/>
+      <circle cx="178" cy="75" r=".9"/><circle cx="228" cy="75" r=".9"/><circle cx="276" cy="75" r=".9"/>
     </g>
   </svg></div>
     </div>
@@ -162,22 +201,39 @@
   <article class="lead">
     <div class="panel">
       <div class="panel-txt">
-        <div class="pk">ODISHA, INDIA · CYCLONE</div>
+        <div class="pkrow"><span class="pk">ODISHA, INDIA · CYCLONE</span><span class="bdg o">OFFICIAL</span></div>
         <div class="pfig">300,000+</div>
         <div class="punit">moved to shelters</div>
         <div class="psub">before Akvan came ashore</div>
       </div>
-      <div class="part"><svg viewBox="0 0 128 104" aria-hidden="true">
-    <rect width="128" height="104" fill="#0c3742"/>
-    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="#c9bda3"/>
-    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="none" stroke="#8f9f92" stroke-width="0.6" opacity="0.6"/>
-    <path d="M54.0 49.0L54.1 49.1L54.1 49.2L54.1 49.4L54.2 49.5L54.2 49.6L54.2 49.8L54.3 49.9L54.3 50.1L54.3 50.2L54.3 50.4L54.3 50.5L54.3 50.7L54.3 50.8L54.3 51.0L54.2 51.1L54.2 51.3L54.2 51.4L54.1 51.6L54.1 51.7L54.0 51.9L53.9 52.0L53.9 52.2L53.8 52.3L53.7 52.5L53.6 52.6L53.5 52.8L53.4 52.9L53.3 53.1L53.1 53.2L53.0 53.3L52.9 53.5L52.7 53.6L52.6 53.7L52.4 53.9L52.3 54.0L52.1 54.1L51.9 54.2L51.7 54.3L51.6 54.4L51.4 54.5L51.2 54.6L51.0 54.7L50.8 54.7L50.5 54.8L50.3 54.9L50.1 54.9L49.9 55.0L49.7 55.0L49.4 55.1L49.2 55.1L49.0 55.1L48.7 55.1L48.5 55.1L48.2 55.1L48.0 55.1L47.7 55.1L47.5 55.1L47.3 55.1L47.0 55.0L46.8 55.0L46.5 54.9L46.3 54.8L46.0 54.8L45.8 54.7L45.5 54.6L45.3 54.5L45.0 54.4L44.8 54.3L44.6 54.1L44.3 54.0L44.1 53.9L43.9 53.7L43.7 53.6L43.5 53.4L43.3 53.2L43.1 53.0L42.9 52.9L42.7 52.7L42.5 52.5L42.3 52.3L42.1 52.0L42.0 51.8L41.8 51.6L41.7 51.4L41.5 51.1L41.4 50.9L41.3 50.6L41.2 50.4L41.1 50.1L41.0 49.8L40.9 49.6L40.8 49.3L40.8 49.0L40.7 48.7L40.7 48.4L40.6 48.2L40.6 47.9L40.6 47.6L40.6 47.3L40.6 47.0L40.7 46.7L40.7 46.4L40.8 46.1L40.8 45.8L40.9 45.5L41.0 45.2L41.1 44.9L41.2 44.6L41.3 44.3L41.4 44.0L41.6 43.7L41.7 43.5L41.9 43.2L42.1 42.9L42.3 42.6L42.5 42.4L42.7 42.1L42.9 41.8L43.2 41.6L43.4 41.4L43.7 41.1L43.9 40.9L44.2 40.7L44.5 40.5L44.8 40.2L45.1 40.0L45.4 39.9L45.7 39.7L46.1 39.5L46.4 39.3L46.8 39.2L47.1 39.0L47.5 38.9L47.9 38.8L48.2 38.7L48.6 38.6L49.0 38.5L49.4 38.4L49.8 38.4L50.2 38.3L50.6 38.3L51.0 38.2L51.4 38.2L51.8 38.2L52.2 38.2L52.6 38.3L53.1 38.3L53.5 38.4L53.9 38.4L54.3 38.5L54.7 38.6L55.1 38.7L55.5 38.8L55.9 38.9L56.3 39.1L56.7 39.2L57.1 39.4L57.5 39.6L57.9 39.8L58.3 40.0" fill="none" stroke="#eef4f2" stroke-width="2.6" stroke-linecap="round" opacity="0.95" transform="rotate(0 50 49)"/><path d="M62.0 49.0L62.0 49.4L62.1 49.7L62.1 50.1L62.1 50.5L62.1 50.9L62.1 51.2L62.0 51.6L62.0 52.0L61.9 52.4L61.9 52.7L61.8 53.1L61.6 53.5L61.5 53.9L61.4 54.2L61.2 54.6L61.1 55.0L60.9 55.3L60.7 55.7L60.5 56.0L60.2 56.4L60.0 56.7L59.7 57.1L59.5 57.4L59.2 57.7L58.9 58.0L58.6 58.3L58.3 58.6L57.9 58.9L57.6 59.2L57.2 59.5L56.9 59.7L56.5 60.0L56.1 60.2L55.7 60.4L55.3 60.6L54.9 60.8L54.4 61.0L54.0 61.2L53.6 61.4L53.1 61.5L52.6 61.7L52.2 61.8L51.7 61.9L51.2 62.0L50.7 62.1L50.3 62.1L49.8 62.2L49.3 62.2L48.8 62.2L48.3 62.2L47.8 62.2L47.2 62.2L46.7 62.2L46.2 62.1L45.7 62.0L45.2 61.9L44.7 61.8L44.2 61.7L43.7 61.6L43.2 61.4L42.7 61.3L42.3 61.1L41.8 60.9L41.3 60.7L40.8 60.4L40.4 60.2L39.9 59.9L39.5 59.7L39.1 59.4L38.6 59.1L38.2 58.7L37.8 58.4L37.4 58.1L37.1 57.7L36.7 57.3L36.3 57.0L36.0 56.6L35.7 56.2L35.4 55.7L35.1 55.3L34.8 54.9L34.5 54.4L34.3 54.0L34.0 53.5L33.8 53.0L33.6 52.6L33.5 52.1L33.3 51.6L33.2 51.1L33.0 50.6L32.9 50.1L32.8 49.5L32.8 49.0L32.7 48.5L32.7 48.0L32.7 47.4L32.7 46.9L32.7 46.4L32.8 45.8L32.9 45.3L33.0 44.8L33.1 44.2L33.2 43.7L33.4 43.2L33.5 42.7L33.7 42.1L34.0 41.6L34.2 41.1L34.4 40.6L34.7 40.1L35.0 39.6L35.3 39.2L35.7 38.7L36.0 38.2L36.4 37.8L36.8 37.3L37.2 36.9L37.6 36.5L38.1 36.1L38.5 35.7L39.0 35.3L39.5 34.9L40.0 34.6L40.5 34.2L41.0 33.9L41.6 33.6L42.1 33.3L42.7 33.0L43.3 32.8L43.9 32.5L44.5 32.3L45.1 32.1L45.7 31.9L46.4 31.7L47.0 31.6L47.7 31.4L48.3 31.3L49.0 31.2L49.6 31.2L50.3 31.1L51.0 31.1L51.7 31.1L52.3 31.1L53.0 31.1L53.7 31.2L54.4 31.2L55.1 31.3L55.7 31.4L56.4 31.6L57.1 31.7L57.7 31.9L58.4 32.1L59.1 32.3L59.7 32.6L60.3 32.8L61.0 33.1L61.6 33.4L62.2 33.7L62.8 34.1L63.4 34.4" fill="none" stroke="#9ec9c6" stroke-width="1.4" stroke-linecap="round" opacity="0.75" transform="rotate(28 50 49)"/><path d="M70.0 49.0L70.0 49.6L70.1 50.2L70.1 50.8L70.0 51.5L70.0 52.1L69.9 52.7L69.8 53.3L69.7 53.9L69.6 54.5L69.4 55.1L69.2 55.7L69.0 56.3L68.8 56.9L68.5 57.5L68.2 58.1L67.9 58.7L67.6 59.2L67.2 59.8L66.9 60.3L66.5 60.9L66.1 61.4L65.6 61.9L65.2 62.4L64.7 62.9L64.2 63.4L63.7 63.9L63.2 64.3L62.6 64.7L62.1 65.2L61.5 65.6L60.9 65.9L60.3 66.3L59.6 66.7L59.0 67.0L58.3 67.3L57.7 67.6L57.0 67.9L56.3 68.1L55.6 68.3L54.9 68.5L54.1 68.7L53.4 68.9L52.7 69.0L51.9 69.2L51.1 69.3L50.4 69.3L49.6 69.4L48.9 69.4L48.1 69.4L47.3 69.4L46.5 69.3L45.8 69.3L45.0 69.2L44.2 69.1L43.5 68.9L42.7 68.8L42.0 68.6L41.2 68.4L40.5 68.1L39.7 67.9L39.0 67.6L38.3 67.3L37.6 67.0L36.9 66.6L36.2 66.3L35.5 65.9L34.8 65.5L34.2 65.0L33.6 64.6L32.9 64.1L32.3 63.6L31.8 63.1L31.2 62.6L30.7 62.0L30.1 61.5L29.6 60.9L29.1 60.3L28.7 59.7L28.2 59.0L27.8 58.4L27.4 57.7L27.1 57.1L26.7 56.4L26.4 55.7L26.1 55.0L25.9 54.3L25.6 53.5L25.4 52.8L25.2 52.0L25.1 51.3L24.9 50.5L24.8 49.8L24.8 49.0L24.7 48.2L24.7 47.5L24.7 46.7L24.8 45.9L24.8 45.2L25.0 44.4L25.1 43.6L25.2 42.8L25.4 42.1L25.7 41.3L25.9 40.6L26.2 39.8L26.5 39.1L26.8 38.4L27.2 37.6L27.6 36.9L28.0 36.2L28.4 35.5L28.9 34.8L29.4 34.2L29.9 33.5L30.5 32.9L31.1 32.3L31.7 31.7L32.3 31.1L32.9 30.5L33.6 30.0L34.3 29.4L35.0 28.9L35.7 28.5L36.5 28.0L37.3 27.5L38.0 27.1L38.8 26.7L39.7 26.4L40.5 26.0L41.4 25.7L42.2 25.4L43.1 25.1L44.0 24.9L44.9 24.6L45.8 24.5L46.7 24.3L47.6 24.2L48.6 24.0L49.5 24.0L50.4 23.9L51.4 23.9L52.3 23.9L53.3 23.9L54.2 24.0L55.2 24.1L56.1 24.2L57.1 24.4L58.0 24.5L58.9 24.8L59.8 25.0L60.8 25.3L61.7 25.5L62.6 25.9L63.5 26.2L64.3 26.6L65.2 27.0L66.0 27.4L66.9 27.9L67.7 28.4L68.5 28.9" fill="none" stroke="#eef4f2" stroke-width="2.6" stroke-linecap="round" opacity="0.95" transform="rotate(56 50 49)"/>
-    <circle cx="50" cy="49" r="2.2" fill="#e0662f"/>
-    <g stroke="#b9d4d6" stroke-width="0.6" opacity="0.45">
-      <path d="M6 14L2 22M18 8L14 16M32 6L28 14M70 96L66 104M84 94L80 102"/>
+      <div class="part"><svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="gc1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b4150"/><stop offset="1" stop-color="#14707f"/>
+    </linearGradient></defs>
+    <rect width="315" height="96" fill="url(#gc1)"/>
+    <g fill="none" stroke="#1d6b7a" stroke-width=".8" opacity=".45">
+      <path d="M0 18h315M0 42h315M0 66h315M0 90h315" stroke-dasharray="16 12"/>
     </g>
-    <circle cx="88" cy="62" r="2.4" fill="#e0662f"/>
-    <circle cx="88" cy="62" r="5" fill="none" stroke="#e0662f" stroke-width="0.8" opacity="0.55"/>
+    <path d="M226 96C244 74 250 55 268 39C282 26 300 17 315 12V96Z" fill="#27492f"/>
+    <path d="M226 96C244 74 250 55 268 39C282 26 300 17 315 12" fill="none" stroke="#a3c08c" stroke-width="1.4"/>
+    <g fill="none" stroke="#f2fbfa" stroke-linecap="round" transform="translate(196 46)">
+      <path d="M7.0 0.0L7.1 0.2L7.1 0.5L7.2 0.7L7.2 0.9L7.3 1.2L7.3 1.4L7.3 1.7L7.3 1.9L7.3 2.2L7.2 2.5L7.2 2.7L7.2 3.0L7.1 3.2L7.0 3.5L7.0 3.8L6.9 4.0L6.8 4.3L6.6 4.5L6.5 4.8L6.4 5.1L6.2 5.3L6.1 5.6L5.9 5.8L5.7 6.0L5.5 6.3L5.3 6.5L5.1 6.7L4.8 6.9L4.6 7.2L4.3 7.4L4.1 7.6L3.8 7.7L3.5 7.9L3.2 8.1L2.9 8.3L2.6 8.4L2.3 8.6L1.9 8.7L1.6 8.8L1.3 8.9L0.9 9.0L0.5 9.1L0.2 9.2L-0.2 9.3L-0.6 9.3L-1.0 9.4L-1.3 9.4L-1.7 9.4L-2.1 9.4L-2.5 9.4L-2.9 9.4L-3.3 9.3L-3.7 9.3L-4.1 9.2L-4.5 9.2L-4.9 9.1L-5.3 9.0L-5.7 8.8L-6.1 8.7L-6.5 8.6L-6.8 8.4L-7.2 8.2L-7.6 8.0L-8.0 7.8L-8.3 7.6L-8.7 7.4L-9.0 7.1L-9.4 6.9L-9.7 6.6L-10.0 6.3L-10.3 6.0L-10.6 5.7L-10.9 5.4L-11.2 5.1L-11.5 4.8L-11.7 4.4L-12.0 4.0L-12.2 3.7L-12.4 3.3L-12.6 2.9L-12.8 2.5L-12.9 2.1L-13.1 1.7L-13.2 1.3L-13.3 0.9L-13.4 0.4L-13.5 -0.0L-13.6 -0.5L-13.6 -0.9L-13.7 -1.4L-13.7 -1.8L-13.7 -2.3L-13.6 -2.7L-13.6 -3.2L-13.5 -3.6L-13.4 -4.1L-13.3 -4.6L-13.2 -5.0L-13.1 -5.5L-12.9 -5.9L-12.7 -6.4L-12.5 -6.8L-12.3 -7.3L-12.1 -7.7L-11.8 -8.1L-11.5 -8.5L-11.3 -9.0L-10.9 -9.4L-10.6 -9.8L-10.3 -10.2L-9.9 -10.5L-9.5 -10.9L-9.1 -11.3L-8.7 -11.6L-8.3 -11.9L-7.8 -12.3L-7.4 -12.6L-6.9 -12.8L-6.4 -13.1L-5.9 -13.4L-5.4 -13.6L-4.8 -13.9L-4.3 -14.1L-3.8 -14.3L-3.2 -14.5L-2.6 -14.6L-2.0 -14.8L-1.5 -14.9L-0.9 -15.0L-0.3 -15.1L0.3 -15.1L1.0 -15.2L1.6 -15.2L2.2 -15.2L2.8 -15.2L3.4 -15.2L4.1 -15.1L4.7 -15.0L5.3 -14.9L5.9 -14.8L6.5 -14.7L7.2 -14.5L7.8 -14.3L8.4 -14.1L9.0 -13.9L9.6 -13.7L10.2 -13.4L10.7 -13.1L11.3 -12.8L11.9 -12.5L12.4 -12.1L12.9 -11.8L13.4 -11.4L14.0 -11.0L14.4 -10.6L14.9 -10.1L15.4 -9.7L15.8 -9.2L16.2 -8.7L16.6 -8.2" stroke-width="3.4"/>
+      <path d="M19.0 0.0L19.1 0.6L19.1 1.1L19.1 1.7L19.1 2.3L19.1 2.9L19.0 3.4L19.0 4.0L18.9 4.6L18.8 5.2L18.6 5.7L18.5 6.3L18.3 6.9L18.1 7.4L17.9 8.0L17.6 8.6L17.4 9.1L17.1 9.7L16.8 10.2L16.4 10.7L16.1 11.2L15.7 11.8L15.3 12.3L14.9 12.7L14.5 13.2L14.1 13.7L13.6 14.1L13.1 14.6L12.6 15.0L12.1 15.4L11.6 15.8L11.0 16.2L10.4 16.6L9.9 17.0L9.3 17.3L8.7 17.6L8.0 17.9L7.4 18.2L6.7 18.5L6.1 18.7L5.4 19.0L4.7 19.2L4.0 19.4L3.3 19.5L2.6 19.7L1.9 19.8L1.2 19.9L0.5 20.0L-0.3 20.1L-1.0 20.1L-1.8 20.1L-2.5 20.1L-3.3 20.1L-4.0 20.1L-4.7 20.0L-5.5 19.9L-6.2 19.8L-7.0 19.6L-7.7 19.5L-8.5 19.3L-9.2 19.1L-9.9 18.9L-10.6 18.6L-11.3 18.4L-12.0 18.1L-12.7 17.7L-13.4 17.4L-14.1 17.0L-14.7 16.7L-15.4 16.3L-16.0 15.9L-16.6 15.4L-17.3 15.0L-17.8 14.5L-18.4 14.0L-19.0 13.5L-19.5 12.9L-20.0 12.4L-20.5 11.8L-21.0 11.2L-21.5 10.6L-21.9 10.0L-22.3 9.4L-22.7 8.7L-23.1 8.1L-23.4 7.4L-23.8 6.7L-24.1 6.0L-24.3 5.3L-24.6 4.6L-24.8 3.9L-25.0 3.2L-25.2 2.4L-25.3 1.7L-25.4 0.9L-25.5 0.2L-25.6 -0.6L-25.6 -1.3L-25.6 -2.1L-25.6 -2.9L-25.6 -3.6L-25.5 -4.4L-25.4 -5.2L-25.2 -5.9L-25.1 -6.7L-24.9 -7.5L-24.6 -8.2L-24.4 -9.0L-24.1 -9.7L-23.8 -10.5L-23.5 -11.2L-23.1 -11.9L-22.7 -12.6L-22.3 -13.3L-21.9 -14.0L-21.4 -14.7L-20.9 -15.4L-20.4 -16.0L-19.8 -16.6L-19.3 -17.3L-18.7 -17.9L-18.0 -18.5L-17.4 -19.0L-16.7 -19.6L-16.0 -20.1L-15.3 -20.6L-14.6 -21.1L-13.9 -21.6L-13.1 -22.1L-12.3 -22.5L-11.5 -22.9L-10.7 -23.3L-9.8 -23.7L-9.0 -24.0L-8.1 -24.3L-7.2 -24.6L-6.4 -24.9L-5.5 -25.1L-4.5 -25.3L-3.6 -25.5L-2.7 -25.6L-1.8 -25.8L-0.8 -25.9L0.1 -25.9L1.1 -26.0L2.0 -26.0L3.0 -26.0L4.0 -26.0L4.9 -25.9L5.9 -25.8L6.8 -25.7L7.8 -25.5L8.7 -25.3L9.7 -25.1L10.6 -24.9L11.6 -24.6L12.5 -24.3L13.4 -23.9L14.3 -23.6L15.2 -23.2L16.1 -22.8" stroke-width="2.6" opacity=".85"/>
+      <path d="M30.0 0.0L30.0 0.8L30.1 1.7L30.1 2.5L30.0 3.3L30.0 4.2L29.9 5.0L29.7 5.8L29.6 6.7L29.4 7.5L29.2 8.3L29.0 9.1L28.7 9.9L28.4 10.8L28.1 11.6L27.7 12.3L27.4 13.1L26.9 13.9L26.5 14.7L26.1 15.4L25.6 16.2L25.1 16.9L24.5 17.6L24.0 18.3L23.4 19.0L22.8 19.7L22.1 20.3L21.5 21.0L20.8 21.6L20.1 22.2L19.3 22.8L18.6 23.4L17.8 23.9L17.0 24.4L16.2 25.0L15.4 25.4L14.6 25.9L13.7 26.3L12.8 26.8L11.9 27.2L11.0 27.5L10.1 27.9L9.2 28.2L8.2 28.5L7.2 28.7L6.3 29.0L5.3 29.2L4.3 29.4L3.3 29.6L2.3 29.7L1.3 29.8L0.3 29.9L-0.7 29.9L-1.8 29.9L-2.8 29.9L-3.8 29.9L-4.8 29.8L-5.8 29.7L-6.9 29.6L-7.9 29.5L-8.9 29.3L-9.9 29.1L-10.9 28.9L-11.9 28.6L-12.9 28.3L-13.9 28.0L-14.9 27.6L-15.8 27.3L-16.8 26.9L-17.7 26.4L-18.6 26.0L-19.6 25.5L-20.5 25.0L-21.3 24.5L-22.2 23.9L-23.0 23.3L-23.9 22.7L-24.7 22.1L-25.5 21.5L-26.2 20.8L-27.0 20.1L-27.7 19.4L-28.4 18.6L-29.1 17.9L-29.7 17.1L-30.3 16.3L-30.9 15.5L-31.5 14.6L-32.0 13.8L-32.5 12.9L-33.0 12.0L-33.5 11.1L-33.9 10.2L-34.3 9.3L-34.6 8.4L-35.0 7.4L-35.3 6.5L-35.5 5.5L-35.8 4.5L-36.0 3.5L-36.1 2.6L-36.3 1.6L-36.4 0.6L-36.4 -0.4L-36.5 -1.4L-36.5 -2.5L-36.4 -3.5L-36.3 -4.5L-36.2 -5.5L-36.1 -6.5L-35.9 -7.5L-35.7 -8.5L-35.5 -9.5L-35.2 -10.5L-34.9 -11.5L-34.5 -12.4L-34.1 -13.4L-33.7 -14.4L-33.3 -15.3L-32.8 -16.3L-32.3 -17.2L-31.7 -18.1L-31.2 -19.0L-30.5 -19.9L-29.9 -20.7L-29.2 -21.6L-28.5 -22.4L-27.8 -23.2L-27.0 -24.0L-26.3 -24.8L-25.4 -25.6L-24.6 -26.3L-23.7 -27.0L-22.8 -27.7L-21.9 -28.4L-21.0 -29.0L-20.0 -29.6L-19.0 -30.2L-18.0 -30.7L-17.0 -31.3L-15.9 -31.8L-14.9 -32.3L-13.8 -32.7L-12.7 -33.1L-11.6 -33.5L-10.5 -33.9L-9.3 -34.2L-8.2 -34.5L-7.0 -34.8L-5.8 -35.0L-4.6 -35.2L-3.4 -35.4L-2.2 -35.5L-1.0 -35.6L0.2 -35.7L1.4 -35.7L2.6 -35.7L3.8 -35.7L5.1 -35.6L6.3 -35.5L7.5 -35.4" stroke-width="2" opacity=".55"/>
+    </g>
+    <circle cx="196" cy="46" r="3.2" fill="#ffc07a"/>
+    <circle cx="196" cy="46" r="6.8" fill="none" stroke="#ffc07a" stroke-width="1" opacity=".8"/>
+    <g stroke="#9fd0d4" stroke-width=".7" opacity=".4" stroke-linecap="round">
+      <path d="M14 10l-8 14M34 4l-9 16M56 8l-9 16M78 2l-9 16M100 8l-9 16M122 4l-8 14"/>
+      <path d="M244 86l-8 14M266 90l-8 14M288 84l-8 14M308 92l-7 12"/>
+      <path d="M12 52l-7 12M70 56l-7 12M128 52l-7 12M196 88l-7 12"/>
+    </g>
+    <g>
+      <path d="M140 20L226 62" stroke="#f3c79a" stroke-width="1" stroke-dasharray="3 4" opacity=".8"/>
+      <circle cx="226" cy="62" r="5.2" fill="none" stroke="#f3c79a" stroke-width="1.3"/>
+      <circle cx="226" cy="62" r="2" fill="#f3c79a"/>
+      <path d="M226 56V44l8 3-8 3" fill="#f3c79a"/>
+    </g>
   </svg></div>
     </div>
     <h3>Cyclone Akvan<br>strikes Odisha</h3>
@@ -187,20 +243,34 @@
   <article class="lead">
     <div class="panel">
       <div class="panel-txt">
-        <div class="pk">TAIPEI · SEOUL · TOKYO</div>
+        <div class="pkrow"><span class="pk">TAIPEI · SEOUL · TOKYO</span><span class="bdg c">CONFIRMED</span></div>
         <div class="pfig">−6.2%</div>
         <div class="punit">Taiwan’s index, in a day</div>
         <div class="psub">worst week since 1991; Seoul −5.2%, Tokyo −5.1%</div>
       </div>
-      <div class="part"><svg viewBox="0 0 128 104" aria-hidden="true">
-    <rect width="128" height="104" fill="#191411"/>
-    <g stroke="#3b332b" stroke-width="0.6" stroke-dasharray="2 3">
-      <path d="M6 24H122M6 48H122M6 72H122M6 94H122"/>
+      <div class="part"><svg viewBox="0 0 315 96" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="gm1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#331811"/><stop offset="1" stop-color="#4b2418"/>
+    </linearGradient></defs>
+    <rect width="315" height="96" fill="url(#gm1)"/>
+    <g stroke="#f7f3ea" stroke-width=".6" opacity=".07">
+      <path d="M0 16h315M0 32h315M0 48h315M0 64h315M0 80h315"/>
+      <path d="M26 0v96M78 0v96M130 0v96M182 0v96M234 0v96M286 0v96"/>
     </g>
-    <g stroke="#6b6055" stroke-width="1" fill="none" stroke-linejoin="round" stroke-dasharray="3 3" opacity="0.5">
-      <path d="M6 20L20 22L34 19L48 30L62 34L76 48L90 60L104 62L122 82"/>
+    <path d="M28 18L60 26L92 22L124 36L156 42L188 52L220 58L252 64L284 74L310 84V96H28Z" fill="#e0552c" opacity=".22"/>
+    <g stroke="#e0662f" stroke-width="1">
+      <path d="M44 20v14M66 24v16M88 24v18M110 32v18M132 38v18M154 42v18M176 48v20M198 54v18M220 58v20M242 62v18M264 66v20M286 70v18M302 76v18"/>
     </g>
-    <line x1="12" y1="13.0" x2="12" y2="32.0" stroke="#e0662f" stroke-width="0.8"/><rect x="9.0" y="18.0" width="6" height="9" fill="#c94a24"/><line x1="25" y1="21.2" x2="25" y2="45.2" stroke="#e0662f" stroke-width="0.8"/><rect x="22.0" y="26.2" width="6" height="14" fill="#c94a24"/><line x1="38" y1="29.4" x2="38" y2="51.4" stroke="#e0662f" stroke-width="0.8"/><rect x="35.0" y="34.4" width="6" height="12" fill="#f3c79a"/><line x1="51" y1="37.6" x2="51" y2="57.6" stroke="#e0662f" stroke-width="0.8"/><rect x="48.0" y="42.6" width="6" height="10" fill="#c94a24"/><line x1="64" y1="45.8" x2="64" y2="70.8" stroke="#e0662f" stroke-width="0.8"/><rect x="61.0" y="50.8" width="6" height="15" fill="#c94a24"/><line x1="77" y1="54.0" x2="77" y2="77.0" stroke="#e0662f" stroke-width="0.8"/><rect x="74.0" y="59.0" width="6" height="13" fill="#f3c79a"/><line x1="90" y1="62.2" x2="90" y2="83.2" stroke="#e0662f" stroke-width="0.8"/><rect x="87.0" y="67.2" width="6" height="11" fill="#c94a24"/><line x1="103" y1="70.4" x2="103" y2="89.4" stroke="#e0662f" stroke-width="0.8"/><rect x="100.0" y="75.4" width="6" height="9" fill="#c94a24"/><line x1="116" y1="78.6" x2="116" y2="102.6" stroke="#e0662f" stroke-width="0.8"/><rect x="113.0" y="83.6" width="6" height="14" fill="#f3c79a"/>
+    <g>
+      <rect x="41" y="23" width="7" height="8" fill="#d9553a"/><rect x="63" y="28" width="7" height="9" fill="#f3c79a"/>
+      <rect x="85" y="28" width="7" height="11" fill="#d9553a"/><rect x="107" y="36" width="7" height="10" fill="#d9553a"/>
+      <rect x="129" y="42" width="7" height="10" fill="#f3c79a"/><rect x="151" y="46" width="7" height="11" fill="#d9553a"/>
+      <rect x="173" y="52" width="7" height="12" fill="#d9553a"/><rect x="195" y="58" width="7" height="10" fill="#f3c79a"/>
+      <rect x="217" y="62" width="7" height="12" fill="#d9553a"/><rect x="239" y="66" width="7" height="11" fill="#d9553a"/>
+      <rect x="261" y="70" width="7" height="12" fill="#f3c79a"/><rect x="283" y="74" width="7" height="10" fill="#d9553a"/>
+    </g>
+    <path d="M28 18L60 26L92 22L124 36L156 42L188 52L220 58L252 64L284 74L310 84" fill="none" stroke="#ff8a6b" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    <path d="M286 72h16l-8 14z" fill="#ff8a6b"/>
   </svg></div>
     </div>
     <h3>AI sell-off sinks<br>Asia’s markets</h3>
@@ -233,61 +303,61 @@
 
   <section class="cards">
   <article class="card" style="--gc:#1f4e79">
-    <div class="chead"><span class="ck">BRUSSELS · DIPLOMACY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5v19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6.6 4h11.6l-2.8 3.7 2.8 3.7H6.6z" fill="currentColor"/><path d="M6.6 12.6h8.6l-2.2 3 2.2 3H6.6z" fill="currentColor" opacity=".55"/></svg></span></div>
+    <div class="chead"><span class="ck">BRUSSELS · DIPLOMACY</span><span class="bdg c">CONFIRMED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 2.5v19" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M6.6 4h11.6l-2.8 3.7 2.8 3.7H6.6z" fill="currentColor"/><path d="M6.6 12.6h8.6l-2.2 3 2.2 3H6.6z" fill="currentColor" opacity=".55"/></svg></span></div>
     <h4>UK and EU seal a reset deal</h4>
     <p>Food trade, youth visas and a carbon link, agreed in Brussels.</p>
     <div class="src">Reuters</div>
   </article>
   <article class="card" style="--gc:#1f4e79">
-    <div class="chead"><span class="ck">ANTALYA · CLIMATE</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5.8 16.2 5.4 9.2 12 3c6.6 6.2 6.2 13.2 0 18z" fill="currentColor"/><path d="M12 20V8.5M12 12.5l3-2.5M12 16l-2.6-2.2" stroke="#f7f3ea" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span></div>
+    <div class="chead"><span class="ck">ANTALYA · CLIMATE</span><span class="bdg o">OFFICIAL</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5.8 16.2 5.4 9.2 12 3c6.6 6.2 6.2 13.2 0 18z" fill="currentColor"/><path d="M12 20V8.5M12 12.5l3-2.5M12 16l-2.6-2.2" stroke="#f7f3ea" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg></span></div>
     <h4>COP31: no deal on its last day</h4>
     <p>The draft leaves out fossil fuels; France and Panama object.</p>
     <div class="src">UN News</div>
   </article>
   <article class="card" style="--gc:#1f4e79">
-    <div class="chead"><span class="ck">EASTERN POLAND · SECURITY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.3 2.8 3.4 5.9 3.4 9.4V16H8.6v-4.6C8.6 7.9 9.7 4.8 12 2z" fill="currentColor"/><path d="M8.6 12.6 5.6 17v4l3-2.2M15.4 12.6 18.4 17v4l-3-2.2" fill="currentColor"/><path d="M10.4 16.6h3.2L12 21.6z" fill="#e0662f"/></svg></span></div>
+    <div class="chead"><span class="ck">POLAND · SECURITY</span><span class="bdg c">CONFIRMED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c2.3 2.8 3.4 5.9 3.4 9.4V16H8.6v-4.6C8.6 7.9 9.7 4.8 12 2z" fill="currentColor"/><path d="M8.6 12.6 5.6 17v4l3-2.2M15.4 12.6 18.4 17v4l-3-2.2" fill="currentColor"/><path d="M10.4 16.6h3.2L12 21.6z" fill="#e0662f"/></svg></span></div>
     <h4>A Russian missile lands in Poland</h4>
     <p>It fell in a field; Tusk called it a provocation.</p>
     <div class="src">Reuters</div>
   </article>
   <article class="card" style="--gc:#8a5a1b">
-    <div class="chead"><span class="ck">CENTRAL IRAQ · SECURITY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2 20 5v6.3c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M12 6.2v9.6M9.4 9.6h5.2" stroke="#f7f3ea" stroke-width="1.4" stroke-linecap="round"/></svg></span></div>
+    <div class="chead"><span class="ck">CENTRAL IRAQ · SECURITY</span><span class="bdg r">REPORTED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2 20 5v6.3c0 5-3.4 8.7-8 10.5-4.6-1.8-8-5.5-8-10.5V5z" fill="currentColor"/><path d="M12 6.2v9.6M9.4 9.6h5.2" stroke="#f7f3ea" stroke-width="1.4" stroke-linecap="round"/></svg></span></div>
     <h4>Iraqi troops enter a militia town</h4>
     <p>The army deployed to Jurf al-Sakhar.</p>
     <div class="src">Reuters</div>
   </article>
   <article class="card" style="--gc:#1f4e79">
-    <div class="chead"><span class="ck">ITALY · LABOUR</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.4 15.4 4.6v14.8L3 13.6z" fill="currentColor"/><path d="M15.4 9.2c2.2.7 3.4 1.8 3.4 3.3s-1.2 2.6-3.4 3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.4 14.2v4.2h3.1v-3.2" fill="currentColor" opacity=".7"/></svg></span></div>
+    <div class="chead"><span class="ck">ITALY · LABOUR</span><span class="bdg r">REPORTED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.4 15.4 4.6v14.8L3 13.6z" fill="currentColor"/><path d="M15.4 9.2c2.2.7 3.4 1.8 3.4 3.3s-1.2 2.6-3.4 3.3" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.4 14.2v4.2h3.1v-3.2" fill="currentColor" opacity=".7"/></svg></span></div>
     <h4>Italy strikes over the budget</h4>
     <p>Workers and students march as anger at Meloni grows.</p>
     <div class="src">Reuters</div>
   </article>
   <article class="card" style="--gc:#a8321f">
-    <div class="chead"><span class="ck">TOKYO · ECONOMY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h3.2v-5.2H3.5zM10.4 20.5h3.2v-9.4h-3.2zM17.3 20.5h3.2V6.8h-3.2z" fill="currentColor" opacity=".85"/><path d="M4 9.4l5.8-4 3.6 1.8L20.4 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.6 2h3.8v3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>
+    <div class="chead"><span class="ck">TOKYO · ECONOMY</span><span class="bdg c">CONFIRMED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 20.5h3.2v-5.2H3.5zM10.4 20.5h3.2v-9.4h-3.2zM17.3 20.5h3.2V6.8h-3.2z" fill="currentColor" opacity=".85"/><path d="M4 9.4l5.8-4 3.6 1.8L20.4 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M16.6 2h3.8v3.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>
     <h4>Japan’s inflation climbs to 2.3%</h4>
     <p>Food and energy costs rise; a December rate rise stays in view.</p>
     <div class="src">Reuters</div>
   </article>
   <article class="card" style="--gc:#a8321f">
-    <div class="chead"><span class="ck">SEOUL · POLITICS</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-38 12 7.5)"><rect x="5.4" y="4.4" width="13.2" height="5.4" rx="1.1" fill="currentColor"/><rect x="10.9" y="9.6" width="2.2" height="12.4" rx="1" fill="currentColor"/></g></svg></span></div>
+    <div class="chead"><span class="ck">SEOUL · POLITICS</span><span class="bdg r">REPORTED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><g transform="rotate(-38 12 7.5)"><rect x="5.4" y="4.4" width="13.2" height="5.4" rx="1.1" fill="currentColor"/><rect x="10.9" y="9.6" width="2.2" height="12.4" rx="1" fill="currentColor"/></g></svg></span></div>
     <h4>Korea moves to impeach its top judge</h4>
     <p>The ruling party acts after a conviction is overturned.</p>
     <div class="src">Korea Herald</div>
   </article>
   <article class="card" style="--gc:#1c6b4a">
-    <div class="chead"><span class="ck">TURKANA, KENYA · ENERGY</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5.6 20.5M12 2l6.4 18.5M8 14.6h8M9.3 9.7h5.4M6.6 19.6h10.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19.4 12.4c1.5 1.9 2.2 3.1 2.2 4.1a2.2 2.2 0 0 1-4.4 0c0-1 .7-2.2 2.2-4.1z" fill="#e0662f"/></svg></span></div>
+    <div class="chead"><span class="ck">TURKANA, KENYA · ENERGY</span><span class="bdg c">CONFIRMED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 5.6 20.5M12 2l6.4 18.5M8 14.6h8M9.3 9.7h5.4M6.6 19.6h10.8" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M19.4 12.4c1.5 1.9 2.2 3.1 2.2 4.1a2.2 2.2 0 0 1-4.4 0c0-1 .7-2.2 2.2-4.1z" fill="#e0662f"/></svg></span></div>
     <h4>Kenya drills its first oil well</h4>
     <p>Turkana crude is due to flow on 1 December.</p>
     <div class="src">allAfrica</div>
   </article>
   <article class="card" style="--gc:#5a3a86">
-    <div class="chead"><span class="ck">SAN SALVADOR · POLITICS</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.4" width="16" height="11.6" rx="1.2" fill="currentColor"/><rect x="9.2" y="2.6" width="9.4" height="9.2" rx="1" fill="currentColor" opacity=".6"/><path d="M11 7.1l1.9 1.9 3.4-3.4" fill="none" stroke="#f7f3ea" stroke-width="1.6" stroke-linecap="round"/><rect x="10.2" y="13.2" width="4.4" height="1.5" fill="#f7f3ea"/></svg></span></div>
+    <div class="chead"><span class="ck">SAN SALVADOR · POLITICS</span><span class="bdg r">REPORTED</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9.4" width="16" height="11.6" rx="1.2" fill="currentColor"/><rect x="9.2" y="2.6" width="9.4" height="9.2" rx="1" fill="currentColor" opacity=".6"/><path d="M11 7.1l1.9 1.9 3.4-3.4" fill="none" stroke="#f7f3ea" stroke-width="1.6" stroke-linecap="round"/><rect x="10.2" y="13.2" width="4.4" height="1.5" fill="#f7f3ea"/></svg></span></div>
     <h4>Bukele files for a third term</h4>
     <p>El Salvador votes on 28 February 2027.</p>
     <div class="src">AP</div>
   </article>
   <article class="card" style="--gc:#0d6070">
-    <div class="chead"><span class="ck">WELLINGTON · CRICKET</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4" fill="currentColor"/><path d="M6.4 6.6c3 1.1 4.6 3.1 5.7 4.9M17.6 17.4c-3-1.1-4.6-3.1-5.7-4.9" fill="none" stroke="#f7f3ea" stroke-width="1.3" stroke-linecap="round"/><g stroke="#f7f3ea" stroke-width="1"><path d="M7.4 8.2 6.4 7.4M8.9 9.7l-1-.8M10.4 11.2l-1-.8M16.6 15.8l1 .8M15.1 14.3l1 .8M13.6 12.8l1 .8"/></g></svg></span></div>
+    <div class="chead"><span class="ck">WELLINGTON · CRICKET</span><span class="bdg o">OFFICIAL</span><span class="cg"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.4" fill="currentColor"/><path d="M6.4 6.6c3 1.1 4.6 3.1 5.7 4.9M17.6 17.4c-3-1.1-4.6-3.1-5.7-4.9" fill="none" stroke="#f7f3ea" stroke-width="1.3" stroke-linecap="round"/><g stroke="#f7f3ea" stroke-width="1"><path d="M7.4 8.2 6.4 7.4M8.9 9.7l-1-.8M10.4 11.2l-1-.8M16.6 15.8l1 .8M15.1 14.3l1 .8M13.6 12.8l1 .8"/></g></svg></span></div>
     <h4>Phillips hits 118 against India</h4>
     <p>New Zealand closed on 317/6; Nicholls was 146 not out.</p>
     <div class="src">ICC</div>
@@ -305,7 +375,9 @@
   <footer class="foot">
     <p><b>Date check.</b> Every story above is dated 20 November 2026: the thirteen in the hour strip were filed in UTC
       that day, the rest carry that day&rsquo;s dateline in their own time zone. Nothing here is from an earlier or later day.
-      Outlets are named with each story; the map is drawn from Natural Earth land outlines.</p>
+      Chips show sourcing: <b>OFFICIAL</b> where the outlet is the body that issued the report, <b>CONFIRMED</b>
+      where the edition worked from a published article, <b>REPORTED</b> where it worked from the outlet's sources.
+      The map is drawn from Natural Earth land outlines.</p>
     <div class="mark">One day &middot; 35 stories &middot; 7 regions</div>
   </footer>
 </body></html>
