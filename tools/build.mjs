@@ -1,0 +1,311 @@
+// build.mjs: writes poster.html, the 1024x1024 front page for Friday 20 November 2026.
+// Stories and figures come from edition.json; the wording comes from copy.mjs.
+import { readFileSync, writeFileSync } from 'node:fs';
+import { leads, cards, briefs, numbers, REGION, MAP_POINTS } from './copy.mjs';
+
+const edition = JSON.parse(readFileSync(new URL('./edition.json', import.meta.url), 'utf8'));
+const landPath = readFileSync(new URL('./land-path.txt', import.meta.url), 'utf8');
+const stories = edition.stories;
+const by = (n) => stories.find((s) => s.n === n);
+const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+// ---- integrity: every story appears exactly once, and no copy names a story the edition lacks ----
+const used = [...leads, ...cards, ...briefs].map((s) => s.n);
+if (used.length !== 35 || new Set(used).size !== 35) throw new Error('page must carry all 35 stories once: ' + used.length);
+for (const n of used) if (!by(n)) throw new Error('story ' + n + ' is not in the edition');
+if (leads[0].n !== 1 || leads[1].n !== 2 || leads[2].n !== 3) throw new Error('leads must be the edition leads');
+
+const regionOf = (r) => REGION[r] ?? REGION.world;
+const dotColor = (r) => (DARK_MAP ? REGC[r] ?? REGC.world : regionOf(r)[1]);
+const dotColorCss = (r) => (DARK_MAP ? REGC[r] ?? REGC.world : regionOf(r)[1]);
+const counts = stories.reduce((m, s) => ((m[s.region] = (m[s.region] ?? 0) + 1), m), {});
+const regionLine = Object.entries(counts)
+  .sort((a, b) => b[1] - a[1])
+  .map(([r, c]) => `<span class="rg"><i style="background:${regionOf(r)[1]}"></i>${regionOf(r)[0]}<b>${c}</b></span>`)
+  .join('');
+
+// ---- map: equirectangular, cropped to 72N..50S so the panel holds no dead polar bands ----
+const DARK_MAP = process.env.MAPSTYLE !== 'light';
+const MAPC = DARK_MAP
+  ? { sea: '#0f2433', land: '#2b4c63', stroke: '#456b83', grid: '#1b3749', label: '#f4efe3', halo: '#0f2433' }
+  : { sea: '#cfdedb', land: '#faf6ec', stroke: '#a3937a', grid: '#bccdc9', label: '#1b1712', halo: '#f9f5ea' };
+const REGC = DARK_MAP
+  ? { europe: '#6ea8e0', asia: '#ef6a4a', 'middle-east': '#e0a94f', africa: '#4fbf8b', americas: '#a987e0', oceania: '#45c2d6', world: '#c9ced4' }
+  : null;
+const TOP = 12, HEIGHT = 122; // 84 - 72 = 12, and 84 + 50 = 134
+const project = ([lon, lat]) => [lon + 180, 84 - Math.max(-58, Math.min(84, lat))];
+const dot = (s) => {
+  const [x, y] = project([s.geo.lon, s.geo.lat]);
+  const c = dotColor(s.region);
+  const lead = s.tier === 'lead';
+  return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${lead ? 2.4 : 2.1}" fill="${c}" opacity="${lead ? 0.98 : 0.85}"/>`;
+};
+const dotPaths = stories.filter((s) => s.geo).map(dot).join('');
+const leadDots = [1, 2].map((n) => {
+  const s = by(n);
+  const [x, y] = project([s.geo.lon, s.geo.lat]);
+  const p = MAP_POINTS[n];
+  return `<g><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5.2" fill="${MAPC.halo}"/>` +
+    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3.9" fill="${dotColor(s.region)}"/>` +
+    `<text x="${x.toFixed(1)}" y="${(y + 1.9).toFixed(1)}" class="mn">${n}</text>` +
+    `<text x="${(x + p.dx).toFixed(1)}" y="${(y + p.dy).toFixed(1)}" class="ml"${p.anchor ? ' text-anchor="end"' : ''}>${p.label}</text></g>`;
+}).join('');
+const eastAsia = MAP_POINTS[3].map((c) => {
+  const [x, y] = project([c.lon, c.lat]);
+  return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.6" fill="${dotColor('asia')}"/>`;
+}).join('');
+const [tx, ty] = project([MAP_POINTS[3.1].lon, MAP_POINTS[3.1].lat]);
+const taipeiLabel = `<g><circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="5.2" fill="${MAPC.halo}"/>` +
+  `<circle cx="${tx.toFixed(1)}" cy="${ty.toFixed(1)}" r="3.9" fill="${dotColor('asia')}"/>` +
+  `<text x="${tx.toFixed(1)}" y="${(ty + 1.9).toFixed(1)}" class="mn">3</text>` +
+  `<text x="${(tx - 6).toFixed(1)}" y="${(ty + 10).toFixed(1)}" class="ml" text-anchor="end">TAIPEI</text></g>`;
+
+const mapSvg = `<svg class="map" viewBox="0 ${TOP} 360 ${HEIGHT}" preserveAspectRatio="xMidYMid meet" aria-label="World map with one dot for each story">
+  <rect x="0" y="${TOP}" width="360" height="${HEIGHT}" fill="${MAPC.sea}"/>
+  <g stroke="${MAPC.grid}" stroke-width="0.35" fill="none">
+    <path d="M0 26H360M0 56H360M0 86H360M0 116H360"/>
+    <path d="M60 0V142M120 0V142M180 0V142M240 0V142M300 0V142"/>
+  </g>
+  <path d="${landPath}" fill="${MAPC.land}" stroke="${MAPC.stroke}" stroke-width="0.55"/>
+  ${dotPaths}
+  ${eastAsia}
+  ${leadDots}
+  ${taipeiLabel}
+</svg>`;
+
+// ---- lead illustrations: flat shapes drawn here, no photographs ----
+function spiral(cx, cy, turns, r0, r1, steps = 160) {
+  const pts = [];
+  for (let i = 0; i <= steps; i++) {
+    const f = i / steps, t = f * turns * Math.PI * 2, r = r0 + (r1 - r0) * f;
+    pts.push([cx + r * Math.cos(t), cy + r * Math.sin(t) * 0.9]);
+  }
+  return 'M' + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join('L');
+}
+const candles = Array.from({ length: 9 }, (_, i) => {
+  const x = 12 + i * 13;
+  const top = 18 + i * 8.2;
+  const h = 9 + ((i * 5) % 7);
+  return `<line x1="${x}" y1="${(top - 5).toFixed(1)}" x2="${x}" y2="${(top + h + 5).toFixed(1)}" stroke="#e0662f" stroke-width="0.8"/>` +
+    `<rect x="${(x - 3).toFixed(1)}" y="${top.toFixed(1)}" width="6" height="${h}" fill="${i % 3 === 2 ? '#f3c79a' : '#c94a24'}"/>`;
+}).join('');
+
+const ART = {
+  bridges: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#13253c"/>
+    <g stroke="#e0662f" stroke-width="1" stroke-linecap="round" opacity="0.95">
+      <path d="M88 4L74 30"/><path d="M100 2L86 32"/><path d="M112 8L98 34"/><path d="M76 2L64 24"/>
+    </g>
+    <g fill="#f0b24a"><circle cx="74" cy="30" r="1.7"/><circle cx="86" cy="32" r="1.7"/><circle cx="98" cy="34" r="1.7"/><circle cx="64" cy="24" r="1.5"/></g>
+    <path d="M0 78H128" stroke="#aebfd2" stroke-width="1.5"/>
+    <g fill="none" stroke="#e4ebf3" stroke-width="1.3">
+      <path d="M2 78C2 62 28 62 28 78"/><path d="M34 78C34 54 66 54 66 78"/><path d="M72 78C72 62 98 62 98 78"/><path d="M104 78C104 66 124 66 124 78"/>
+    </g>
+    <g stroke="#dbe3ec" stroke-width="0.6" opacity="0.85">
+      <path d="M15 78V67M59 78V62M85 78V67M114 78V70"/>
+      <path d="M2 70H28M34 64H66M72 70H98M104 73H124"/>
+    </g>
+    <g stroke="#7f97b2" stroke-width="0.8" opacity="0.6">
+      <path d="M14 86H44M58 92H90M100 86H122M26 98H62M74 98H106"/>
+    </g>
+  </svg>`,
+  cyclone: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#0c3742"/>
+    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="#c9bda3"/>
+    <path d="M96 0H128V104H84C96 78 92 44 104 16Z" fill="none" stroke="#8f9f92" stroke-width="0.6" opacity="0.6"/>
+    ${[0, 1, 2].map((i) => `<path d="${spiral(50, 49, 0.86, 4 + i * 8, 13 + i * 8)}" fill="none" stroke="${i === 1 ? '#9ec9c6' : '#eef4f2'}" stroke-width="${i === 1 ? 1.4 : 2.6}" stroke-linecap="round" opacity="${i === 1 ? 0.75 : 0.95}" transform="rotate(${i * 28} 50 49)"/>`).join('')}
+    <circle cx="50" cy="49" r="2.2" fill="#e0662f"/>
+    <g stroke="#b9d4d6" stroke-width="0.6" opacity="0.45">
+      <path d="M6 14L2 22M18 8L14 16M32 6L28 14M70 96L66 104M84 94L80 102"/>
+    </g>
+    <circle cx="88" cy="62" r="2.4" fill="#e0662f"/>
+    <circle cx="88" cy="62" r="5" fill="none" stroke="#e0662f" stroke-width="0.8" opacity="0.55"/>
+  </svg>`,
+  market: `<svg viewBox="0 0 128 104" aria-hidden="true">
+    <rect width="128" height="104" fill="#191411"/>
+    <g stroke="#3b332b" stroke-width="0.6" stroke-dasharray="2 3">
+      <path d="M6 24H122M6 48H122M6 72H122M6 94H122"/>
+    </g>
+    <g stroke="#6b6055" stroke-width="1" fill="none" stroke-linejoin="round" stroke-dasharray="3 3" opacity="0.5">
+      <path d="M6 20L20 22L34 19L48 30L62 34L76 48L90 60L104 62L122 82"/>
+    </g>
+    ${candles}
+  </svg>`,
+};
+
+const leadBlock = (l, i) => `
+  <article class="lead">
+    <div class="panel">
+      <div class="panel-txt">
+        <div class="pk">${esc(l.kicker)}</div>
+        <div class="pfig">${esc(l.fig)}</div>
+        <div class="punit">${esc(l.figUnit)}</div>
+        <div class="psub">${esc(l.figSub)}</div>
+      </div>
+      <div class="part">${ART[l.art]}</div>
+    </div>
+    <h3>${l.head.map((h) => esc(h)).join('<br>')}</h3>
+    <p class="deck">${esc(l.deck)}</p>
+    <div class="src">${esc(l.src)}</div>
+  </article>`;
+
+const cardBlock = (c) => `
+  <article class="card">
+    <div class="ck">${esc(c.kicker)}</div>
+    <h4>${esc(c.head)}</h4>
+    <p>${esc(c.hook)}</p>
+    <div class="src">${esc(c.src)}</div>
+  </article>`;
+
+const briefLi = (b) => `<li><b>${esc(b.place)}</b> ${esc(b.text)} <span class="bs">${esc(b.src)}</span></li>`;
+// column-major so each of the three columns is full and the last row is never ragged
+const per = Math.ceil(briefs.length / 3);
+const long = briefs.length - per * 3 + 3; // first `long` columns take one extra
+const cols = [];
+let at = 0;
+for (let i = 0; i < 3; i++) { const size = per - (i < long ? 0 : 1); cols.push(briefs.slice(at, at + size)); at += size; }
+
+const numBlock = (n) => `<div class="num"><div class="nf">${esc(n.fig)}</div><div class="nc">${esc(n.cap)} <span class="ns">&middot; ${esc(n.src)}</span></div></div>`;
+
+const html = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Friday 20 November 2026</title>
+<style>
+  :root { --paper:#f7f3ea; --ink:#15120e; --muted:#6d645a; --rule:#15120e; --soft:#d8cfc0; --accent:#b3261e; }
+  * { box-sizing:border-box; margin:0; padding:0 }
+  html,body { width:1024px; height:1024px; overflow:hidden }
+  body { background:var(--paper); color:var(--ink); font-family:Arial,Helvetica,sans-serif;
+    -webkit-font-smoothing:antialiased; padding:11px 16px 9px; display:flex; flex-direction:column; gap:5px }
+
+  .rail { display:flex; justify-content:space-between; align-items:baseline; background:var(--ink);
+    color:#e8dfd2; padding:3px 8px 2.5px; font-size:8.8px; letter-spacing:.16em; text-transform:uppercase }
+  .rail b { color:var(--paper); letter-spacing:.18em } .rail .date { color:#f3c79a; font-weight:700; letter-spacing:.18em }
+
+  .mast { display:flex; justify-content:space-between; align-items:flex-end; gap:18px;
+    border-top:3px solid var(--rule); border-bottom:1px solid var(--rule); padding:3px 0 4px }
+  .mast h1 { font-family:Georgia,'Times New Roman',serif; font-weight:700; font-size:51px; line-height:.94;
+    letter-spacing:-.028em }
+  .mast .side { text-align:right; font-size:8.6px; line-height:1.35; letter-spacing:.1em; text-transform:uppercase;
+    color:#4a433b; padding-bottom:3px; white-space:nowrap }
+  .mast .side b { display:block; font-size:10.6px; letter-spacing:.01em; text-transform:none; color:var(--ink);
+    font-family:Georgia,serif; font-style:italic; font-weight:400; margin:1px 0 }
+
+  .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
+  .lead { min-width:0; display:flex; flex-direction:column }
+  .panel { position:relative; display:flex; height:98px; overflow:hidden; background:#13253c }
+  .panel .part { position:absolute; right:0; top:0; width:120px; height:98px }
+  .panel .part svg { display:block; width:120px; height:98px }
+  .panel::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(19,37,60,.97) 34%, rgba(19,37,60,0) 68%); z-index:1 }
+  .lead:nth-child(2) .panel::after { background:linear-gradient(90deg, rgba(12,55,66,.97) 34%, rgba(12,55,66,0) 68%) }
+  .lead:nth-child(3) .panel::after { background:linear-gradient(90deg, rgba(25,20,17,.97) 34%, rgba(25,20,17,0) 68%) }
+  .panel-txt { position:relative; z-index:2; padding:5px 0 5px 8px; width:100%; color:#f7f3ea;
+    display:flex; flex-direction:column }
+  .pk { font-size:7.4px; letter-spacing:.13em; text-transform:uppercase; color:#f3c79a; font-weight:700 }
+  .pfig { font-family:Georgia,serif; font-size:26px; font-weight:700; line-height:1; letter-spacing:-.02em; margin-top:auto }
+  .punit { font-size:8.2px; letter-spacing:.05em; text-transform:uppercase; color:#ece3d5; margin-top:1px }
+  .psub { font-size:7.5px; line-height:1.18; color:#bcc9d2; margin-top:1px; max-width:66% }
+  .lead:nth-child(2) .pk { color:#bfe3e0 }
+  .lead:nth-child(3) .pk { color:#f3c79a }
+
+  .lead h3 { font-family:Georgia,serif; font-size:21px; line-height:1.03; letter-spacing:-.018em; margin:5px 0 2px }
+  .lead .deck { font-size:9.8px; line-height:1.22; color:#332d26; min-height:24px }
+  .src { font-size:7.4px; letter-spacing:.055em; text-transform:uppercase; color:#8a8074; margin-top:2px }
+
+  .mid { display:grid; grid-template-columns:1fr 312px; gap:14px; border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule); padding:4px 0 5px }
+  h5 { font-size:8.4px; letter-spacing:.13em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:2px }
+  h5 span { color:var(--muted); letter-spacing:.04em; text-transform:none; font-weight:400; font-size:7.8px }
+  .map { width:100%; display:block; border:1px solid ${DARK_MAP ? '#0b1c27' : '#aebbb8'} }
+  .ml { font:700 5.4px Arial; fill:${MAPC.label}; letter-spacing:.03em; paint-order:stroke; stroke:${MAPC.halo}; stroke-width:1.1 }
+  .mn { font:700 4.9px Arial; fill:#f9f5ea; text-anchor:middle }
+  .regions { display:flex; flex-wrap:wrap; gap:1px 11px; margin-top:3px; align-items:center }
+  .rg { font-size:8px; color:#3d372f; display:inline-flex; align-items:center; gap:3px }
+  .rg i { width:5.5px; height:5.5px; display:inline-block }
+  .rg b { margin-left:1px }
+  .nums-note { font-size:7.4px; line-height:1.25; color:#e8dfd2; opacity:.75; margin-top:auto }
+
+  .nums-panel { background:#0f2433; color:var(--paper); padding:4px 9px 10px; display:flex; flex-direction:column }
+  .nums-panel h5 { color:#f3c79a; border-bottom:1px solid #4a433b; padding-bottom:2px; margin-bottom:3px }
+  .nums-panel h5 span { color:#a89c8d }
+  .nums { display:grid; grid-template-columns:1fr 1fr; gap:2px 8px; flex:1; align-content:space-between }
+  .nf { font-family:Georgia,serif; font-size:16px; font-weight:700; line-height:1; letter-spacing:-.02em; color:#f3c79a }
+  .nc { font-size:7.1px; line-height:1.12; color:#e8dfd2; margin-top:1px; padding-right:2px }
+  .ns { color:#a89c8d; font-size:6.4px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
+
+  .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
+  .card { padding:3px 0 4px; border-bottom:1px solid var(--soft); min-width:0 }
+  .ck { font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
+  .card h4 { font-family:Georgia,serif; font-size:12.4px; line-height:1.06; letter-spacing:-.01em; margin:1px 0 }
+  .card p { font-size:9px; line-height:1.18; color:#4a433b }
+  .card .src { margin-top:1px }
+
+  .sentence { border-top:2px solid var(--rule); border-bottom:1px solid var(--rule); padding:5px 0 6px;
+    display:flex; gap:12px; align-items:baseline }
+  .sentence .lab { font-size:8px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent);
+    font-weight:700; white-space:nowrap }
+  .sentence p { font-family:Georgia,serif; font-size:15.4px; line-height:1.2; letter-spacing:-.01em }
+  .sentence p b { font-weight:700 }
+
+  .briefs-head { border-top:1px solid var(--soft); padding-top:3px; display:flex; justify-content:space-between; align-items:baseline }
+  .briefs-head h5 { margin:0 }
+  .briefs-head .cnt { font-size:7.8px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted) }
+  .briefs { flex:1; min-height:0; border-top:1px solid var(--soft); padding:5px 0 4px; margin-top:3px;
+    display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 16px }
+  ul.b { list-style:none; display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
+  ul.b li { font-size:10.5px; line-height:1.23; color:#2b2620; padding-left:9px; position:relative }
+  ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3px; height:3px; background:var(--accent) }
+  ul.b li b { font-weight:700 }
+  .bs { color:#8a8074; font-size:7px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap }
+
+  .foot { border-top:1px solid var(--rule); padding-top:3px; display:flex; justify-content:space-between;
+    align-items:baseline; gap:14px }
+  .foot p { font-size:7.5px; line-height:1.24; color:#4a433b; max-width:820px }
+  .foot p b { color:var(--ink) }
+  .mark { font-family:Georgia,serif; font-size:10px; font-weight:700; letter-spacing:.02em; white-space:nowrap }
+</style></head>
+<body>
+  <div class="rail">
+    <span><b>The world in one day</b></span>
+    <span class="date">Friday 20 November 2026</span>
+    <span>35 stories &middot; 7 regions &middot; every one dated</span>
+  </div>
+
+  <header class="mast">
+    <h1>Friday 20 November 2026</h1>
+    <div class="side">A front page of the day&rsquo;s reporting<b>35 stories, from Kyiv to Wellington</b></div>
+  </header>
+
+  <section class="leads">${leads.map(leadBlock).join('')}</section>
+
+  <section class="mid">
+    <div>
+      <h5>Where it happened, Friday 20 November 2026 <span>one dot for each dateline, coloured by region</span></h5>
+      ${mapSvg}
+      <div class="regions">${regionLine}</div>
+    </div>
+    <div class="nums-panel">
+      <h5>The day in numbers <span>as its outlets reported them</span></h5>
+      <div class="nums">${numbers.map(numBlock).join('')}</div>
+    </div>
+  </section>
+
+  <section class="cards">${cards.map(cardBlock).join('')}</section>
+
+  <section class="sentence">
+    <span class="lab">The day in one sentence</span>
+    <p>Missiles over <b>Kyiv</b>, a <b>cyclone</b> over Odisha, a sell-off from <b>Taipei</b> to Seoul,
+      a reset deal in <b>Brussels</b> and no deal in <b>Antalya</b>: one Friday, 35 stories, seven regions.</p>
+  </section>
+
+  <section class="briefs-head"><h5>And in brief <span>the rest of the day, place by place</span></h5><span class="cnt">22 more stories</span></section>
+  <section class="briefs">${cols.map((c) => `<ul class="b">${c.map(briefLi).join('')}</ul>`).join('')}</section>
+
+  <footer class="foot">
+    <p><b>Every story above is dated Friday 20 November 2026</b> and attributed to the outlets named with it.
+      The day&rsquo;s news is what happened, or was first reported, that day: counts and market moves are the reports&rsquo; own,
+      never our estimates. Map drawn from Natural Earth land outlines; no photographs.</p>
+    <div class="mark">One day &middot; 35 stories &middot; 7 regions</div>
+  </footer>
+</body></html>`;
+
+writeFileSync(new URL('./poster.html', import.meta.url), html);
+console.log('poster.html', html.length, 'bytes |', leads.length, 'leads', cards.length, 'cards', briefs.length, 'briefs', numbers.length, 'numbers');
