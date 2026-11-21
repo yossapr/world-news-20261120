@@ -2,9 +2,11 @@
 
 [![make.fun bounty](https://img.shields.io/badge/make.fun-news--image--20261120-b3261e)](https://make.fun/bounty/news-image-20261120)
 
-A single 1024 × 1024 front page that sums up Friday 20 November 2026: the date in full, three lead
-stories, a world map with one dot for each dateline, ten more stories, ten figures from the day,
-and 22 short briefs — all 35 of the day's stories, each with the outlet that reported it.
+A single 1024 × 1024 front page that sums up Friday 20 November 2026: the date in full, a strip of
+the thirteen reports the edition stamps inside that day in UTC, three lead stories, a world map with
+one dot for each dateline, ten more stories with a drawn glyph each, ten figures from the day, and 22
+short briefs — all 35 of the day's stories, each with the outlet that reported it. The footer carries
+a date check: which stories are in the UTC strip and that nothing is from an earlier or later day.
 
 The entry in the [make.fun bounty](https://make.fun/bounty/news-image-20261120) is `entry.png`;
 `main.ts` writes it to `/output/entry.png` and nothing else. It reads no network, installs nothing,
@@ -25,9 +27,10 @@ mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
   geo, summary or tldr, and outlets.
 - `tools/copy.mjs` — the page's own wording, one entry per story. Facts (numbers, names, places)
   are the edition's; the sentences are written for this page.
-- `tools/build.mjs` — builds `tools/poster.html` in one pass: masthead, stats band, three leads with
-  drawn panels, the map, the numbers panel, the ten cards, the briefs and the colophon. It refuses to
-  build unless all 35 stories appear exactly once.
+- `tools/build.mjs` — builds `tools/poster.html` in one pass: masthead, the UTC day strip, three leads
+  with drawn panels, the map, the numbers panel, ten cards with drawn glyphs, the briefs and the
+  colophon. It refuses to build unless all 35 stories appear exactly once, and it refuses any day-strip
+  time that is not that story's own `publishedAt` stamp on 2026-11-20 in UTC.
 - `tools/check-facts.mjs` — checks 41 of the page's figures and claims against the edition's own
   record of the story they belong to (`FACTS: 41 claims checked, all present in the edition`).
 - `tools/render.mjs` — screenshots `tools/poster.html` at exactly 1024 × 1024 through headless

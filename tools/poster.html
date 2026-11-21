@@ -20,6 +20,16 @@
   .mast .side b { display:block; font-size:10.6px; letter-spacing:.01em; text-transform:none; color:var(--ink);
     font-family:Georgia,serif; font-style:italic; font-weight:400; margin:1px 0 }
 
+  .daystrip { border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:2px 0 3px }
+  .daystrip .ds-head { display:flex; align-items:baseline; gap:0 }
+  .daystrip h5 { margin:0 0 2px }
+  .ds-track { display:grid; grid-template-columns:repeat(13,minmax(0,1fr)); gap:0 7px;
+    border-top:1px solid #c6bcac; padding-top:3px }
+  .ds-i { position:relative; min-width:0; padding-left:7px; font-size:6.8px; line-height:1.12; color:#332d26 }
+  .ds-i::before { content:''; position:absolute; left:0; top:-3px; width:1px; height:2.5px; background:#8a8074 }
+  .ds-i b { display:block; font-size:7px; letter-spacing:.01em; color:var(--accent); line-height:1.05 }
+  .ds-i span { display:block; margin-top:0.5px; white-space:nowrap; overflow:hidden }
+
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
   .panel { position:relative; display:flex; height:100px; overflow:hidden; background:#16304f }
@@ -63,13 +73,13 @@
   .ns { color:#a89c8d; font-size:6.4px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
 
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
-  .card { padding:4px 0 4px; border-top:2px solid var(--gc); min-width:0 }
+  .card { padding:3px 0 3px; border-top:2px solid var(--gc); min-width:0 }
   .chead { display:flex; justify-content:space-between; align-items:center; gap:5px }
   .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
-  .cg { flex:0 0 21px; width:21px; height:21px; color:var(--gc) }
-  .cg svg { display:block; width:21px; height:21px }
-  .card h4 { font-family:Georgia,serif; font-size:12.4px; line-height:1.06; letter-spacing:-.01em; margin:1px 0 }
-  .card p { font-size:9px; line-height:1.18; color:#4a433b }
+  .cg { flex:0 0 18px; width:18px; height:18px; color:var(--gc) }
+  .cg svg { display:block; width:18px; height:18px }
+  .card h4 { font-family:Georgia,serif; font-size:12.1px; line-height:1.04; letter-spacing:-.01em; margin:1px 0 }
+  .card p { font-size:8.4px; line-height:1.15; color:#4a433b }
   .card .src { margin-top:1px }
 
   .sentence { border-top:2px solid var(--rule); border-bottom:1px solid var(--rule); padding:5px 0 6px;
@@ -85,7 +95,7 @@
   .briefs { flex:1; min-height:0; border-top:1px solid var(--soft); padding:5px 0 4px; margin-top:3px;
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 16px }
   ul.b { list-style:none; display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
-  ul.b li { font-size:10.5px; line-height:1.16; color:#2b2620; padding-left:9px; position:relative }
+  ul.b li { font-size:10.3px; line-height:1.12; color:#2b2620; padding-left:9px; position:relative }
   ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3.5px; height:3.5px; background:var(--gc) }
   ul.b li b { font-weight:700 }
   .bs { color:#8a8074; font-size:7px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap }
@@ -107,6 +117,12 @@
     <h1>Friday 20 November 2026</h1>
     <div class="side">A front page of the day&rsquo;s reporting<b>35 stories, from Kyiv to Wellington</b></div>
   </header>
+
+  
+  <section class="daystrip">
+    <div class="ds-head"><h5>Reported through the day, in UTC <span>the hour each of these thirteen reports was filed</span></h5></div>
+    <div class="ds-track"><div class="ds-i"><b>00:04</b><span>Kyiv bridges</span></div><div class="ds-i"><b>01:01</b><span>China loan rate</span></div><div class="ds-i"><b>01:34</b><span>AfDB debt</span></div><div class="ds-i"><b>02:05</b><span>Lebanon strikes</span></div><div class="ds-i"><b>03:20</b><span>UK–EU deal</span></div><div class="ds-i"><b>03:58</b><span>Akvan landfall</span></div><div class="ds-i"><b>04:41</b><span>Ebola rallies</span></div><div class="ds-i"><b>06:06</b><span>COP31 final day</span></div><div class="ds-i"><b>07:45</b><span>Poland missile</span></div><div class="ds-i"><b>08:18</b><span>Iraq: Jurf al-Sakhar</span></div><div class="ds-i"><b>12:28</b><span>SoftBank −14.48%</span></div><div class="ds-i"><b>14:38</b><span>Yemen ship</span></div><div class="ds-i"><b>16:58</b><span>Estonia border</span></div></div>
+  </section>
 
   <section class="leads">
   <article class="lead">
@@ -281,12 +297,12 @@
   </section>
 
   <section class="briefs-head"><h5>And in brief <span>the rest of the day, place by place</span></h5><span class="cnt">22 more stories</span></section>
-  <section class="briefs"><ul class="b"><li style="--gc:#1f4e79"><b>Lviv</b> A strike on Sknyliv station kills two and hurts four. <span class="bs">BBC</span></li><li style="--gc:#1f4e79"><b>Moscow</b> Russia vows a reply as Estonia shuts their border road for six months. <span class="bs">Reuters</span></li><li style="--gc:#1f4e79"><b>Berlin</b> School pupils strike against military service. <span class="bs">Al Jazeera</span></li><li style="--gc:#3d3d3d"><b>London</b> General says the UK runs cyber attacks abroad. <span class="bs">Sky News</span></li><li style="--gc:#a8321f"><b>Beijing</b> China holds its loan rate at 3.0% for an 18th month. <span class="bs">Xinhua</span></li><li style="--gc:#a8321f"><b>Tokyo</b> SoftBank closes 14.48% lower at ¥3,025. <span class="bs">Al Jazeera</span></li><li style="--gc:#a8321f"><b>Seoul</b> The Kospi ends the week 7.9% lower. <span class="bs">Anadolu</span></li><li style="--gc:#a8321f"><b>Ganjam</b> 209 mm of rain falls at Patrapur as Akvan crosses Odisha. <span class="bs">PTI</span></li></ul><ul class="b"><li style="--gc:#8a5a1b"><b>Lebanon</b> Israeli strikes hit south and east Lebanon; five near Janta. <span class="bs">Anadolu</span></li><li style="--gc:#8a5a1b"><b>Yemen</b> Gunmen fire on a cargo ship off the coast. <span class="bs">UKMTO</span></li><li style="--gc:#1c6b4a"><b>Abuja</b> A court bars the electoral body from elections. <span class="bs">Channels TV</span></li><li style="--gc:#1c6b4a"><b>Kampala</b> Police told to enforce the Ebola ban on rallies. <span class="bs">allAfrica</span></li><li style="--gc:#1c6b4a"><b>Malawi</b> Petrol queues all night; about $3.24 a litre. <span class="bs">Al Jazeera</span></li><li style="--gc:#1c6b4a"><b>Africa</b> The AfDB says 22 countries are in debt distress. <span class="bs">allAfrica</span></li><li style="--gc:#5a3a86"><b>Las Vegas</b> Russell fastest in wet practice, 0.071 s clear. <span class="bs">Autosport</span></li></ul><ul class="b"><li style="--gc:#5a3a86"><b>New York</b> Nasdaq futures fall 1.6% before the bell. <span class="bs">24/7 Wall St</span></li><li style="--gc:#5a3a86"><b>Washington</b> Democrats question a law firm’s free work. <span class="bs">Al Jazeera</span></li><li style="--gc:#0d6070"><b>Wellington</b> Nicholls makes 175 in a stand of 216. <span class="bs">ICC</span></li><li style="--gc:#0d6070"><b>Sydney</b> Australian shares fall 1.6% in the sell-off. <span class="bs">Reuters</span></li><li style="--gc:#3d3d3d"><b>Ankara</b> Panama asks COP31 to cap world oil output. <span class="bs">Anadolu</span></li><li style="--gc:#3d3d3d"><b>Antalya</b> EU officials call the climate draft unacceptable. <span class="bs">RTE</span></li><li style="--gc:#3d3d3d"><b>Turin</b> ATP backs a plan to let live play pay $350m. <span class="bs">Mail on Sunday</span></li></ul></section>
+  <section class="briefs"><ul class="b"><li style="--gc:#1f4e79"><b>Lviv</b> A strike on Sknyliv station kills two and hurts four. <span class="bs">BBC</span></li><li style="--gc:#1f4e79"><b>Moscow</b> Russia vows a reply as Estonia shuts their border road for six months. <span class="bs">Reuters</span></li><li style="--gc:#1f4e79"><b>Berlin</b> School pupils strike against military service. <span class="bs">Al Jazeera</span></li><li style="--gc:#3d3d3d"><b>London</b> General says the UK runs cyber attacks abroad. <span class="bs">Sky News</span></li><li style="--gc:#a8321f"><b>Beijing</b> China holds its loan rate at 3.0% for an 18th month. <span class="bs">Xinhua</span></li><li style="--gc:#a8321f"><b>Tokyo</b> SoftBank closes 14.48% lower at ¥3,025. <span class="bs">Al Jazeera</span></li><li style="--gc:#a8321f"><b>Seoul</b> The Kospi ends the week 7.9% lower. <span class="bs">Anadolu</span></li><li style="--gc:#a8321f"><b>Ganjam</b> 209 mm at Patrapur as Akvan crosses Odisha. <span class="bs">PTI</span></li></ul><ul class="b"><li style="--gc:#8a5a1b"><b>Lebanon</b> Israeli strikes hit south and east Lebanon; five land near Janta. <span class="bs">Anadolu</span></li><li style="--gc:#8a5a1b"><b>Yemen</b> Gunmen fire on a cargo ship off the coast. <span class="bs">UKMTO</span></li><li style="--gc:#1c6b4a"><b>Abuja</b> A court bars the electoral body from elections. <span class="bs">Channels TV</span></li><li style="--gc:#1c6b4a"><b>Kampala</b> Police told to enforce the Ebola ban on rallies. <span class="bs">allAfrica</span></li><li style="--gc:#1c6b4a"><b>Malawi</b> Petrol queues all night; about $3.24 a litre. <span class="bs">Al Jazeera</span></li><li style="--gc:#1c6b4a"><b>Africa</b> The AfDB says 22 countries are in debt distress. <span class="bs">allAfrica</span></li><li style="--gc:#5a3a86"><b>Las Vegas</b> Russell fastest in wet practice, 0.071 s clear. <span class="bs">Autosport</span></li></ul><ul class="b"><li style="--gc:#5a3a86"><b>New York</b> Nasdaq futures fall 1.6% before the bell. <span class="bs">24/7 Wall St</span></li><li style="--gc:#5a3a86"><b>Washington</b> Democrats question a law firm’s free work. <span class="bs">Al Jazeera</span></li><li style="--gc:#0d6070"><b>Wellington</b> Nicholls makes 175 in a stand of 216. <span class="bs">ICC</span></li><li style="--gc:#0d6070"><b>Sydney</b> Australian shares fall 1.6% in the sell-off. <span class="bs">Reuters</span></li><li style="--gc:#3d3d3d"><b>Ankara</b> Panama asks COP31 to cap world oil output. <span class="bs">Anadolu</span></li><li style="--gc:#3d3d3d"><b>Antalya</b> EU officials call the climate draft unacceptable. <span class="bs">RTE</span></li><li style="--gc:#3d3d3d"><b>Turin</b> ATP backs a plan to let live play pay $350m. <span class="bs">Mail on Sunday</span></li></ul></section>
 
   <footer class="foot">
-    <p><b>Every story above is dated Friday 20 November 2026</b> and attributed to the outlets named with it.
-      The day&rsquo;s news is what happened, or was first reported, that day: counts and market moves are the reports&rsquo; own,
-      never our estimates. Map drawn from Natural Earth land outlines; no photographs.</p>
+    <p><b>Date check.</b> Every story above is dated 20 November 2026: the thirteen in the hour strip were filed in UTC
+      that day, the rest carry that day&rsquo;s dateline in their own time zone. Nothing here is from an earlier or later day.
+      Outlets are named with each story; the map is drawn from Natural Earth land outlines.</p>
     <div class="mark">One day &middot; 35 stories &middot; 7 regions</div>
   </footer>
 </body></html>

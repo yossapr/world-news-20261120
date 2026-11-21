@@ -24,6 +24,31 @@ const regionLine = Object.entries(counts)
   .map(([r, c]) => `<span class="rg"><i style="background:${regionOf(r)[1]}"></i>${regionOf(r)[0]}<b>${c}</b></span>`)
   .join('');
 
+
+// ---- the day strip: only stories the edition stamps inside 20 November 2026 in UTC ----
+const DAY_STRIP = [
+  { n: 1, t: '00:04', label: 'Kyiv bridges' },
+  { n: 18, t: '01:01', label: 'China loan rate' },
+  { n: 27, t: '01:34', label: 'AfDB debt' },
+  { n: 22, t: '02:05', label: 'Lebanon strikes' },
+  { n: 4, t: '03:20', label: 'UK–EU deal' },
+  { n: 2, t: '03:58', label: 'Akvan landfall' },
+  { n: 25, t: '04:41', label: 'Ebola rallies' },
+  { n: 5, t: '06:06', label: 'COP31 final day' },
+  { n: 6, t: '07:45', label: 'Poland missile' },
+  { n: 7, t: '08:18', label: 'Iraq: Jurf al-Sakhar' },
+  { n: 19, t: '12:28', label: 'SoftBank −14.48%' },
+  { n: 23, t: '14:38', label: 'Yemen ship' },
+  { n: 15, t: '16:58', label: 'Estonia border' },
+];
+// the times are the edition's publishedAt stamps, so the check is mechanical, not a claim
+for (const d of DAY_STRIP) {
+  const stamps = (by(d.n).links ?? []).map((l) => l.publishedAt ?? '');
+  const utc = stamps.map((x) => x.slice(11, 16));
+  const day = stamps.map((x) => x.slice(0, 10));
+  if (!day.includes('2026-11-20') || !utc.includes(d.t)) throw new Error('day strip time ' + d.t + ' is not story ' + d.n + "'s stamp: " + stamps.join(','));
+}
+
 // ---- map: equirectangular, cropped to 72N..50S so the panel holds no dead polar bands ----
 const DARK_MAP = process.env.MAPSTYLE !== 'light';
 const MAPC = DARK_MAP
@@ -149,6 +174,12 @@ const GLYPH = {
 };
 const GLYPH_BY_STORY = { 4: 'flag', 5: 'leaf', 6: 'missile', 7: 'shield', 8: 'megaphone', 9: 'inflation', 10: 'gavel', 11: 'derrick', 12: 'ballot', 13: 'ball' };
 
+const dayStrip = `
+  <section class="daystrip">
+    <div class="ds-head"><h5>Reported through the day, in UTC <span>the hour each of these thirteen reports was filed</span></h5></div>
+    <div class="ds-track">${DAY_STRIP.map((d) => `<div class="ds-i"><b>${d.t}</b><span>${esc(d.label)}</span></div>`).join('')}</div>
+  </section>`;
+
 const leadBlock = (l, i) => `
   <article class="lead">
     <div class="panel">
@@ -209,6 +240,16 @@ const html = `<!doctype html>
   .mast .side b { display:block; font-size:10.6px; letter-spacing:.01em; text-transform:none; color:var(--ink);
     font-family:Georgia,serif; font-style:italic; font-weight:400; margin:1px 0 }
 
+  .daystrip { border-top:1px solid var(--rule); border-bottom:1px solid var(--rule); padding:2px 0 3px }
+  .daystrip .ds-head { display:flex; align-items:baseline; gap:0 }
+  .daystrip h5 { margin:0 0 2px }
+  .ds-track { display:grid; grid-template-columns:repeat(13,minmax(0,1fr)); gap:0 7px;
+    border-top:1px solid #c6bcac; padding-top:3px }
+  .ds-i { position:relative; min-width:0; padding-left:7px; font-size:6.8px; line-height:1.12; color:#332d26 }
+  .ds-i::before { content:''; position:absolute; left:0; top:-3px; width:1px; height:2.5px; background:#8a8074 }
+  .ds-i b { display:block; font-size:7px; letter-spacing:.01em; color:var(--accent); line-height:1.05 }
+  .ds-i span { display:block; margin-top:0.5px; white-space:nowrap; overflow:hidden }
+
   .leads { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 14px }
   .lead { min-width:0; display:flex; flex-direction:column }
   .panel { position:relative; display:flex; height:100px; overflow:hidden; background:#16304f }
@@ -252,13 +293,13 @@ const html = `<!doctype html>
   .ns { color:#a89c8d; font-size:6.4px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap }
 
   .cards { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 12px; align-content:start }
-  .card { padding:4px 0 4px; border-top:2px solid var(--gc); min-width:0 }
+  .card { padding:3px 0 3px; border-top:2px solid var(--gc); min-width:0 }
   .chead { display:flex; justify-content:space-between; align-items:center; gap:5px }
   .ck { flex:1 1 auto; min-width:0; font-size:6.9px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); font-weight:700; white-space:nowrap; overflow:hidden }
-  .cg { flex:0 0 21px; width:21px; height:21px; color:var(--gc) }
-  .cg svg { display:block; width:21px; height:21px }
-  .card h4 { font-family:Georgia,serif; font-size:12.4px; line-height:1.06; letter-spacing:-.01em; margin:1px 0 }
-  .card p { font-size:9px; line-height:1.18; color:#4a433b }
+  .cg { flex:0 0 18px; width:18px; height:18px; color:var(--gc) }
+  .cg svg { display:block; width:18px; height:18px }
+  .card h4 { font-family:Georgia,serif; font-size:12.1px; line-height:1.04; letter-spacing:-.01em; margin:1px 0 }
+  .card p { font-size:8.4px; line-height:1.15; color:#4a433b }
   .card .src { margin-top:1px }
 
   .sentence { border-top:2px solid var(--rule); border-bottom:1px solid var(--rule); padding:5px 0 6px;
@@ -274,7 +315,7 @@ const html = `<!doctype html>
   .briefs { flex:1; min-height:0; border-top:1px solid var(--soft); padding:5px 0 4px; margin-top:3px;
     display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 16px }
   ul.b { list-style:none; display:flex; flex-direction:column; justify-content:space-between; min-width:0 }
-  ul.b li { font-size:10.5px; line-height:1.16; color:#2b2620; padding-left:9px; position:relative }
+  ul.b li { font-size:10.3px; line-height:1.12; color:#2b2620; padding-left:9px; position:relative }
   ul.b li::before { content:''; position:absolute; left:0; top:5px; width:3.5px; height:3.5px; background:var(--gc) }
   ul.b li b { font-weight:700 }
   .bs { color:#8a8074; font-size:7px; letter-spacing:.03em; text-transform:uppercase; white-space:nowrap }
@@ -296,6 +337,8 @@ const html = `<!doctype html>
     <h1>Friday 20 November 2026</h1>
     <div class="side">A front page of the day&rsquo;s reporting<b>35 stories, from Kyiv to Wellington</b></div>
   </header>
+
+  ${dayStrip}
 
   <section class="leads">${leads.map(leadBlock).join('')}</section>
 
@@ -323,9 +366,9 @@ const html = `<!doctype html>
   <section class="briefs">${cols.map((c) => `<ul class="b">${c.map(briefLi).join('')}</ul>`).join('')}</section>
 
   <footer class="foot">
-    <p><b>Every story above is dated Friday 20 November 2026</b> and attributed to the outlets named with it.
-      The day&rsquo;s news is what happened, or was first reported, that day: counts and market moves are the reports&rsquo; own,
-      never our estimates. Map drawn from Natural Earth land outlines; no photographs.</p>
+    <p><b>Date check.</b> Every story above is dated 20 November 2026: the thirteen in the hour strip were filed in UTC
+      that day, the rest carry that day&rsquo;s dateline in their own time zone. Nothing here is from an earlier or later day.
+      Outlets are named with each story; the map is drawn from Natural Earth land outlines.</p>
     <div class="mark">One day &middot; 35 stories &middot; 7 regions</div>
   </footer>
 </body></html>`;
